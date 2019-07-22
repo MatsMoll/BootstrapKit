@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "HTMLKit",
+        "repositoryURL": "https://github.com/vapor-community/HTMLKit.git",
+        "state": {
+          "branch": "feature/htmlkit-2.0",
+          "revision": "f3a336057e526eac7601c49ff4589c06f3daf84c",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}

@@ -8,30 +8,30 @@
 import HTMLKit
 
 public struct Alert : StaticView {
-    
+
     public var attributes: [HTML.Attribute]
     let content: View
-    let isDisimissable: Bool
+    let isDisimissable: Conditionable
     let style: BootrapStyle
-    
+
     public init(@HTMLBuilder content: () -> View) {
         self.isDisimissable = true
         self.content = content()
         self.attributes = []
         self.style = .primary
     }
-    
-    init(isDisimissable: Bool, style: BootrapStyle, attributes: [HTML.Attribute], content: View) {
+
+    init(isDisimissable: Conditionable, style: BootrapStyle, attributes: [HTML.Attribute], content: View) {
         self.attributes = attributes
         self.content = content
         self.isDisimissable = isDisimissable
         self.style = style
     }
-    
+
     public var body: View {
         Div {
             content
-            IF(.constant(isDisimissable)) {
+            IF(isDisimissable) {
                 Button {
                     Span { "&times;" }
                         .ariaHidden(true)
@@ -42,12 +42,12 @@ public struct Alert : StaticView {
                     .ariaLabel("Close")
             }
         }
-            .class("alert alert-\(style.rawValue)")
+            .class("alert alert-\(style.rawValue)" + IF(isDisimissable) { " fade show" })
             .role("alert")
             .add(attributes: attributes)
     }
-    
-    public func isDismissable(_ isDismissable: Bool) -> Alert {
+
+    public func isDismissable(_ isDismissable: Conditionable) -> Alert {
         .init(isDisimissable: isDismissable, style: style, attributes: attributes, content: content)
     }
 }

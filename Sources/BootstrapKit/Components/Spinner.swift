@@ -34,7 +34,7 @@ public struct Spinner : StaticView, AttributeNode {
 
     public var body: View {
         Div {
-            "Loading..."
+            content
         }
             .class("spinner-\(style.rawValue) text-\(color.rawValue)")
             .role("status")
