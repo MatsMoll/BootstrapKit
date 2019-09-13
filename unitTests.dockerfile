@@ -1,4 +1,4 @@
-FROM norionomura/swift:5120190416a
+FROM vapor/swift:5.1-bionic
 
 WORKDIR /package
 
