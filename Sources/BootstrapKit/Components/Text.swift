@@ -88,4 +88,8 @@ public struct Text : StaticView, AttributeNode {
     public func copy(with attributes: [HTML.Attribute]) -> Text {
         .init(style: style, attributes: attributes, content: content)
     }
+
+    public func font(_ style: Style) -> Text {
+        .init(style: style, attributes: attributes, content: content)
+    }
 }

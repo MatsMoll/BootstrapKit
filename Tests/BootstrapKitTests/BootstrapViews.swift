@@ -100,8 +100,14 @@ struct CardViewTest : StaticView {
 
 struct AccordionViewTest : StaticView {
 
+    let subscriptions: RootValue<[Subscription]> = .root()
+
     var body: View {
         Container {
+            ForEach(in: subscriptions) { sub in
+                sub.description.unsafelyUnwrapped.count
+                sub.price
+            }
             Accordion {
                 Accordion.Group(title: "Hello") {
                     Div { "Test" }
@@ -113,17 +119,47 @@ struct AccordionViewTest : StaticView {
         }
     }
 }
+struct LoginContext {
+    let loginError: String?
+    let options: [String]
+}
 
+struct Subscription : Equatable {
+    let description: String?
+    let price: Int
+}
 
 struct FormViewTest : StaticView {
 
+    let context: RootValue<LoginContext> = .root()
+
     var body: View {
-        Form {
-            FormGroup(label: "Username", Input(type: .text, id: "username"))
-            FormGroup(label: "Password", Input(type: .password, id: "password")) {
-                Small { "Needs to contain ..." }
+        Container {
+            IF(context.loginError.isNotNil) {
+                Alert {
+                    context.loginError
+                }
+                    .isDismissable(true)
+                    .style(.danger)
+                    .margin(.bottom, size: 3)
             }
-            Spinner()
+            Form {
+                FormGroup(
+                    label: "Username",
+                    Input(type: .text, id: "username")
+                )
+                FormGroup(
+                    label: "Password",
+                    Input(type: .password, id: "password")) {
+                        Small { "Needs to contain ..." }
+                }
+                FormGroup(
+                    label: "Test",
+                    Select(context.options) { option in
+                        Text { option }
+                            .font(.heading5)
+                })
+            }
         }
     }
 }

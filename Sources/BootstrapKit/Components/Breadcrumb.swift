@@ -30,7 +30,7 @@ public struct BreadcrumbItem : StaticView {
     let title: View
     let isActive: Conditionable
     
-    public init(uri: View, title: View, isActive: Conditionable = TemplateValue<Never, Bool>.constant(false)) {
+    public init(uri: View, title: View, isActive: Conditionable = false) {
         self.uri = uri
         self.title = title
         self.isActive = isActive
