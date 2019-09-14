@@ -98,13 +98,13 @@ struct CardViewTest : StaticView {
 }
 
 
-struct AccordionViewTest : StaticView {
+struct AccordionViewTest : TemplateView {
 
-    let subscriptions: RootValue<[Subscription]> = .root()
+    let context: RootValue<[Subscription]> = .root()
 
     var body: View {
         Container {
-            ForEach(in: subscriptions) { sub in
+            ForEach(in: context) { sub in
                 sub.description.unsafelyUnwrapped.count
                 sub.price
             }
@@ -129,13 +129,13 @@ struct Subscription : Equatable {
     let price: Int
 }
 
-struct FormViewTest : StaticView {
+struct FormViewTest : TemplateView {
 
     let context: RootValue<LoginContext> = .root()
 
     var body: View {
         Container {
-            IF(context.loginError.isNotNil) {
+            IF(context.loginError != nil) {
                 Alert {
                     context.loginError
                 }
@@ -158,7 +158,28 @@ struct FormViewTest : StaticView {
                     Select(context.options) { option in
                         Text { option }
                             .font(.heading5)
-                })
+                    }.id("test")
+                )
+            }
+        }
+    }
+}
+
+struct ListGroupTest: TemplateView {
+
+    var context: RootValue<[Subscription]> = .root()
+
+    var body: View {
+        Div {
+            ListGroup(context) { value in
+                Text {
+                    value.description
+                }
+            }
+            ListGroup(context, isActive: { $0.price < 100 }) { value in
+                Text {
+                    value.price + " " + value.description
+                }
             }
         }
     }

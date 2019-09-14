@@ -11,15 +11,22 @@ final class BootstrapKitTests: XCTestCase {
     }
     
     func testViews() throws {
+        let testData = [
+            Subscription(description: "Test", price: 10),
+            Subscription(description: "Test 2", price: 200)
+        ]
+
         let textViews = try renderer.renderRaw(TextView.self)
         let columnView = try renderer.renderRaw(ColumnView.self)
         let alertView = try renderer.renderRaw(AlertViewTest.self)
         let breadcrumbActive = try renderer.renderRaw(BreadcrumbViewTest.self, with: "is active")
         let breadcrumbInactive = try renderer.renderRaw(BreadcrumbViewTest.self, with: "")
         let card = try renderer.renderRaw(CardViewTest.self)
-        let accordion = try renderer.renderRaw(AccordionViewTest.self)
-        let form = try renderer.renderRaw(FormViewTest.self)
+        let accordion = try renderer.renderRaw(AccordionViewTest.self, with: testData)
+        let form = try renderer.renderRaw(FormViewTest.self, with: LoginContext(loginError: "", options: []))
+        let listGroup = try renderer.renderRaw(ListGroupTest.self, with: testData)
 
+        print(listGroup)
         print(accordion)
         print(form)
     
@@ -42,6 +49,7 @@ final class BootstrapKitTests: XCTestCase {
         try renderer.add(view: CardViewTest())
         try renderer.add(view: AccordionViewTest())
         try renderer.add(view: FormViewTest())
+        try renderer.add(view: ListGroupTest())
     }
 
     static var allTests = [

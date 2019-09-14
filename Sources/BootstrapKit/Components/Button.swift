@@ -28,7 +28,5 @@ extension ButtonStylable where Self : AttributeNode {
 }
 
 extension Button : ButtonStylable {}
-
 extension Anchor : ButtonStylable {}
-
 extension Input : ButtonStylable {}

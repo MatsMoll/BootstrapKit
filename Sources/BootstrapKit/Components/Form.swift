@@ -60,3 +60,62 @@ public struct FormGroup : StaticView {
 extension AttributeNode {
     var id: View? { attributes.first(where: { $0.attribute == "id" })?.value }
 }
+
+
+public protocol InputGroupAddons : View {}
+
+public struct InputGroup : StaticView {
+
+    let prepend: InputGroupAddons?
+    let append: InputGroupAddons?
+    let input: Input
+    let wrapInput: Bool
+
+    public var body: View {
+        Div {
+            IF(prepend != nil) {
+                Div {
+                    prepend ?? None() // Workaround for concrearte type
+                }.class("input-group-prepend")
+            }
+
+            input.class("form-controll")
+
+            IF(append != nil) {
+                Div {
+                    append ?? None()
+                }.class("input-group-append")
+            }
+        }
+            .class("input-group")
+            .class(IF(wrapInput == false) { " flex-nowrap" })
+    }
+
+
+    struct None: StaticView {
+        var body: View { "" }
+    }
+
+    public struct Text: StaticView {
+
+        let text: String
+
+        public init(_ text: String) {
+            self.text = text
+        }
+
+        public var body: View {
+            Span {
+                text
+            }.class("input-group-text")
+        }
+    }
+
+    typealias ButtonAddon = Button
+    typealias DropdownAddon = Dropdown
+}
+
+extension InputGroup.None : InputGroupAddons {}
+extension InputGroup.Text : InputGroupAddons {}
+extension InputGroup.ButtonAddon : InputGroupAddons {}
+extension InputGroup.DropdownAddon : InputGroupAddons {}
