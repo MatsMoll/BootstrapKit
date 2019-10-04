@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/swift-server/async-http-client.git",
         "state": {
           "branch": null,
-          "revision": "1b31c5a4e381f0a7119c9a41d814cf8f3183a9f7",
-          "version": "1.0.0-alpha.3"
+          "revision": "d84a1da59e0fa879cde27e01cdf9f079208cc0cc",
+          "version": "1.0.0-alpha.4"
         }
       },
       {
@@ -33,7 +33,7 @@
         "repositoryURL": "https://github.com/vapor-community/HTMLKit",
         "state": {
           "branch": "feature/htmlkit-2.0",
-          "revision": "42bf8ecc986bff1d5df700f9698856ff5afdb36d",
+          "revision": "f6e3cb42da2e680754baa36103f2f3a2493617a4",
           "version": null
         }
       },
@@ -96,8 +96,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio-ssl.git",
         "state": {
           "branch": null,
-          "revision": "f5dd7a60ff56f501ff7bf9be753e4b1875bfaf20",
-          "version": "2.4.0"
+          "revision": "109faef770994e71b6bafcc015e2e96b88a4af8c",
+          "version": "2.4.1"
         }
       },
       {
@@ -105,8 +105,8 @@
         "repositoryURL": "https://github.com/vapor/vapor.git",
         "state": {
           "branch": null,
-          "revision": "17c5ca37a4d70cde7c23b7eb2f7037724fa28899",
-          "version": "4.0.0-alpha.3.1.1"
+          "revision": "4efc07f4f5b7cf6e2e5126792dc4032864f1c464",
+          "version": "4.0.0-alpha.3.2"
         }
       }
     ]

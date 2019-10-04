@@ -13,7 +13,7 @@ public protocol ButtonStylable {
     func isActive(_ isActive: Bool) -> Self
 }
 
-extension ButtonStylable where Self : AttributeNode {
+extension ButtonStylable where Self: GlobalAttributes {
     public func size(_ size: SizeClass) -> Self {
         size == .all ? self : self.class("btn-\(size.rawValue)")
     }

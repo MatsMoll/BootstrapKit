@@ -7,7 +7,7 @@
 
 import HTMLKit
 
-public protocol FormInput : AttributeNode {}
+public protocol FormInput : AttributeNode, GlobalAttributes {}
 
 extension Input : FormInput {}
 extension Select : FormInput {}
@@ -44,7 +44,7 @@ public struct FormGroup : StaticView {
     }
 
     public var body: View {
-        guard let inputId = input.id else {
+        guard let inputId = input.value(of: "id") else {
             fatalError("Missing an id attribute on an Input in a FormGroup")
         }
         return Div {
@@ -55,10 +55,6 @@ public struct FormGroup : StaticView {
             }
         }.class("form-group")
     }
-}
-
-extension AttributeNode {
-    var id: View? { attributes.first(where: { $0.attribute == "id" })?.value }
 }
 
 

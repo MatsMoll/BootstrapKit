@@ -12,14 +12,14 @@ public protocol Collapsable {
     func collapse(_ identifier: HTML.Identifier) -> Self
 }
 
-extension Collapsable where Self : AttributeNode {
+extension Collapsable where Self: GlobalAttributes, Self: AttributeNode {
     public func collapse(_ identifier: HTML.Identifier) -> Self {
-        self.dataToggle("collapse")
-            .href(identifier)
+        self.data(for: "toggle", value: "collapse")
+            .add(.init(attribute: "href", value: identifier))
     }
 }
 
-extension AttributeNode {
+extension GlobalAttributes {
     public var isCollapsed: Self {
         self.class("collapse")
     }
@@ -72,7 +72,7 @@ public struct Accordion : StaticView {
             }
                 .isCollapsed
                 .id(id)
-                .dataParent(dataParent)
+                .data(for: "parent", value: dataParent)
                 .add(attributes: attributes)
         }
     }
@@ -88,7 +88,7 @@ public struct Accordion : StaticView {
             let bodyId = UUID().uuidString
             self.head = Head(id: headId, title: title, colapseIdentifier: .id(bodyId))
             self.content = Body(id: bodyId, content: content(), dataParent: .id(""), attributes: [])
-                .ariaLabelledBy(headId)
+                .aria(for: "labelledby", value: headId)
             self.attributes = []
         }
 
@@ -134,15 +134,7 @@ public struct Accordion : StaticView {
     }
 }
 
-
-extension AttributeNode {
-
-    func dataParent(_ identifier: HTML.Identifier) -> Self {
-        self.add(.init(attribute: "data-parent", value: identifier))
-    }
-}
-
-extension Accordion.Body : AttributeNode {
+extension Accordion.Body : AttributeNode, GlobalAttributes {
 
     public func copy(with attributes: [HTML.Attribute]) -> Accordion.Body {
         .init(id: id, content: content, dataParent: dataParent, attributes: attributes)
@@ -153,7 +145,7 @@ extension Accordion.Body : AttributeNode {
     }
 }
 
-extension Accordion.Group : AttributeNode {
+extension Accordion.Group : AttributeNode, GlobalAttributes {
 
     public func copy(with attributes: [HTML.Attribute]) -> Accordion.Group {
         .init(head: head, content: content, attributes: attributes)

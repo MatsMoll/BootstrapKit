@@ -12,14 +12,14 @@ public struct BootstrapPage : StaticView {
         HTMLNode {
             Head {
                 Link()
-                    .rel("stylesheet")
+                    .relationship("stylesheet")
                     .href("https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
             }
             Body {
                 content
-                Script().src("https://code.jquery.com/jquery-3.3.1.slim.min.js")
-                Script().src("https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js")
-                Script().src("https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js")
+                Script().source("https://code.jquery.com/jquery-3.3.1.slim.min.js")
+                Script().source("https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js")
+                Script().source("https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js")
             }
         }
     }
@@ -41,7 +41,7 @@ public enum Direction : String {
     case right = "r"
 }
 
-extension AttributeNode {
+extension GlobalAttributes {
     public func columnWidth(_ width: Int, for sizeClass: SizeClass = .all) -> Self {
         switch sizeClass {
         case .all:  return self.class("col-\(width)")

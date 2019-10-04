@@ -19,9 +19,11 @@ public struct ProgressBar<T> : StaticView {
             }
                 .class("progress-bar")
                 .role("progressbar")
-                .ariaValuemin(valueRange.lowerBound)
-                .ariaValuemax(valueRange.upperBound)
-                .ariaValuenow(currentValue)
+                .add(attributes: [
+                    .init(attribute: "aria-valuemax", value: valueRange.upperBound),
+                    .init(attribute: "aria-valuemin", value: valueRange.lowerBound),
+                    .init(attribute: "aria-valuenow", value: currentValue)
+                ])
         }.class("progress")
     }
 }

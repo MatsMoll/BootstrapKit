@@ -55,7 +55,12 @@ public struct NavigationBar : StaticView {
         let content: View
 
         public var body: View {
-            Button { icon }.class("navbar-toggler").type(.button).dataToggle("collapse").ariaExpanded(false).ariaLabel("Toggle navigation")
+            Button { icon }
+                .class("navbar-toggler")
+                .type(.button)
+                .data(for: "toggle", value: "collapse")
+                .aria(for: "expanded", value: false)
+                .aria(for: "label", value: "Toggle navigation")
         }
     }
 }

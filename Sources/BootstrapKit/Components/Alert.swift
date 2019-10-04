@@ -34,12 +34,12 @@ public struct Alert : StaticView {
             IF(isDisimissable) {
                 Button {
                     Span { "&times;" }
-                        .ariaHidden(true)
+                        .aria(for: "hidden", value: true)
                 }
                     .type(.button)
                     .class("close")
-                    .dataDismiss("alert")
-                    .ariaLabel("Close")
+                    .data(for: "dismiss", value: "alert")
+                    .aria(for: "label", value: "Close")
             }
         }
             .class("alert alert-\(style.rawValue)" + IF(isDisimissable) { " fade show" })

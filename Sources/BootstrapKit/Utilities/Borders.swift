@@ -19,7 +19,7 @@ public enum BorderRadiusStyle : String {
 }
 
 
-extension AttributeNode {
+extension GlobalAttributes {
     public func border(color: BootrapStyle) -> Self {
         self.class("border border-\(color.rawValue)")
     }

@@ -20,7 +20,7 @@ public struct Breadcrumb : StaticView {
             OrderdList {
                 breadcrumbItems
             }.class("breadcrumb")
-        }.ariaLabel("breadcrumb")
+        }.aria(for: "label", value: "breadcrumb")
     }
 }
 
