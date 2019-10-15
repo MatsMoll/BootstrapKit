@@ -29,15 +29,6 @@
         }
       },
       {
-        "package": "HTMLKit",
-        "repositoryURL": "https://github.com/vapor-community/HTMLKit",
-        "state": {
-          "branch": "feature/htmlkit-2.0",
-          "revision": "f6e3cb42da2e680754baa36103f2f3a2493617a4",
-          "version": null
-        }
-      },
-      {
         "package": "open-crypto",
         "repositoryURL": "https://github.com/vapor/open-crypto.git",
         "state": {

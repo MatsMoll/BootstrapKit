@@ -20,16 +20,18 @@ public protocol NavigationBarContent : View {}
 
 public struct NavigationBar : StaticView {
 
+    let expandOn: SizeClass
     let content: View
 
-    public init(@NavigationBarBuilder content: () -> View) {
+    public init(expandOn: SizeClass, @NavigationBarBuilder content: () -> View) {
+        self.expandOn = expandOn
         self.content = content()
     }
 
     public var body: View {
         Nav {
-            ""
-        }
+            content
+        }.class("navbar navbar-expand-" + expandOn.rawValue)
     }
 
     public struct Brand : StaticView, NavigationBarContent {
@@ -53,14 +55,32 @@ public struct NavigationBar : StaticView {
 
         let icon: View
         let content: View
+        let id: String
+
+        public init(icon: View = Span().class("navbar-toggler-icon"), id: String = "navbarSupportedContent", @HTMLBuilder content: () -> View) {
+            self.icon = icon
+            self.content = content()
+            self.id = id
+        }
 
         public var body: View {
             Button { icon }
-                .class("navbar-toggler")
                 .type(.button)
+                .class("navbar-toggler")
                 .data(for: "toggle", value: "collapse")
                 .aria(for: "expanded", value: false)
                 .aria(for: "label", value: "Toggle navigation")
+                .aria(for: "target", value: HTML.Identifier.id(id))
+                .aria(for: "controls", value: id)
+                +
+                Div {
+                    UnorderdList {
+                        content
+                    }.class("navbar-nav mr-auto")
+                }
+                .class("collapse navbar-collapse")
+                .id(id)
+
         }
     }
 }

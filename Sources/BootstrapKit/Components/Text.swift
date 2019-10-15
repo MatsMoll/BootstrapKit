@@ -8,7 +8,7 @@
 import HTMLKit
 
 
-public struct Text : StaticView, AttributeNode {
+public struct Text: StaticView, AttributeNode {
     
     public enum Style : String {
         case display1 = "display-1"
@@ -57,6 +57,10 @@ public struct Text : StaticView, AttributeNode {
     }
     
     public var body: View {
+        textView.add(attributes: attributes)
+    }
+
+    var textView: AttributeNode {
         switch style {
         case .display1, .display2, .display3, .display4:
             return H1 { content }.class(style.rawValue)
@@ -89,7 +93,7 @@ public struct Text : StaticView, AttributeNode {
         .init(style: style, attributes: attributes, content: content)
     }
 
-    public func font(_ style: Style) -> Text {
+    public func style(_ style: Style) -> Text {
         .init(style: style, attributes: attributes, content: content)
     }
 }

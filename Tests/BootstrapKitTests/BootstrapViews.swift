@@ -184,3 +184,18 @@ struct ListGroupTest: TemplateView {
         }
     }
 }
+
+struct RootView: StaticView {
+
+    var body: View {
+        NavigationBar(expandOn: .medium) {
+            NavigationBar.Brand(link: "#") {
+                "Test"
+            }
+            NavigationBar.Collapse {
+                ""
+            }
+        }
+    }
+}
+

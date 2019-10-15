@@ -12,7 +12,7 @@ public struct Alert : StaticView {
     public var attributes: [HTML.Attribute]
     let content: View
     let isDisimissable: Conditionable
-    let style: BootrapStyle
+    let style: BootstrapStyle
 
     public init(@HTMLBuilder content: () -> View) {
         self.isDisimissable = true
@@ -21,7 +21,7 @@ public struct Alert : StaticView {
         self.style = .primary
     }
 
-    init(isDisimissable: Conditionable, style: BootrapStyle, attributes: [HTML.Attribute], content: View) {
+    init(isDisimissable: Conditionable, style: BootstrapStyle, attributes: [HTML.Attribute], content: View) {
         self.attributes = attributes
         self.content = content
         self.isDisimissable = isDisimissable
@@ -42,7 +42,7 @@ public struct Alert : StaticView {
                     .aria(for: "label", value: "Close")
             }
         }
-            .class("alert alert-\(style.rawValue)" + IF(isDisimissable) { " fade show" })
+            .class("alert alert-\(style.rawValue) bg-\(style.rawValue)" + IF(isDisimissable) { " fade show" })
             .role("alert")
             .add(attributes: attributes)
     }
@@ -58,8 +58,8 @@ extension Alert : AttributeNode {
     }
 }
 
-extension Alert : BootstrapStyleable {
-    public func style(_ style: BootrapStyle) -> Alert {
+extension Alert {
+    public func background(color style: BootstrapStyle) -> Alert {
         .init(isDisimissable: isDisimissable, style: style, attributes: attributes, content: content)
     }
 }

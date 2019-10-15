@@ -15,17 +15,17 @@ public struct Spinner : StaticView, AttributeNode {
     }
 
     let style: Style
-    let color: BootrapStyle
+    let color: BootstrapStyle
     public var attributes: [HTML.Attribute] = []
     let content: View
 
-    public init(style: Style, color: BootrapStyle, attributes: [HTML.Attribute], content: View) {
+    public init(style: Style, color: BootstrapStyle, attributes: [HTML.Attribute], content: View) {
         self.attributes = attributes
         self.style = style
         self.color = color
         self.content = content
     }
-    public init(style: Style = .border, color: BootrapStyle = .dark, @HTMLBuilder content: (() -> View) = { Span { "Loading..." }.class("sr-only") }) {
+    public init(style: Style = .border, color: BootstrapStyle = .dark, @HTMLBuilder content: (() -> View) = { Span { "Loading..." }.class("sr-only") }) {
         self.attributes = []
         self.style = style
         self.color = color

@@ -5,14 +5,17 @@
 //  Created by Mats Mollestad on 14/07/2019.
 //
 
-import HTMLKit
+@_exported import HTMLKit
 
-public enum BootrapStyle : String {
+public enum BootstrapStyle : String {
     case primary
     case secondary
     
     case light
     case dark
+
+    case white
+    case muted
     
     case info
     case success
@@ -20,6 +23,3 @@ public enum BootrapStyle : String {
     case warning
 }
 
-public protocol BootstrapStyleable {
-    func style(_ style: BootrapStyle) -> Self
-}

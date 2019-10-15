@@ -12,7 +12,7 @@ public protocol Collapsable {
     func collapse(_ identifier: HTML.Identifier) -> Self
 }
 
-extension Collapsable where Self: GlobalAttributes, Self: AttributeNode {
+extension Collapsable where Self: AttributeNode {
     public func collapse(_ identifier: HTML.Identifier) -> Self {
         self.data(for: "toggle", value: "collapse")
             .add(.init(attribute: "href", value: identifier))

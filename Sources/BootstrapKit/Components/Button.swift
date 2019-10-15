@@ -8,17 +8,17 @@
 import HTMLKit
 
 public protocol ButtonStylable {
-    func style(_ style: BootrapStyle, isOutlined: Bool) -> Self
-    func size(_ size: SizeClass) -> Self
+    func button(style: BootstrapStyle, isOutlined: Bool) -> Self
+    func button(size: SizeClass) -> Self
     func isActive(_ isActive: Bool) -> Self
 }
 
 extension ButtonStylable where Self: GlobalAttributes {
-    public func size(_ size: SizeClass) -> Self {
+    public func button(size: SizeClass) -> Self {
         size == .all ? self : self.class("btn-\(size.rawValue)")
     }
     
-    public func style(_ style: BootrapStyle, isOutlined: Bool = false) -> Self {
+    public func button(style: BootstrapStyle, isOutlined: Bool = false) -> Self {
         self.class("btn btn\(isOutlined ? "-outline" : "")-\(style.rawValue)")
     }
     

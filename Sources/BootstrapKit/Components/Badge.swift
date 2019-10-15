@@ -10,18 +10,18 @@ import HTMLKit
 public struct Badge : StaticView {
 
     public var attributes: [HTML.Attribute]
-    let style: BootrapStyle
+    let style: BootstrapStyle
     let content: View
-    let isPill: Bool
+    let isPill: Conditionable
 
-    init(@HTMLBuilder content: () -> View) {
+    public init(@HTMLBuilder content: () -> View) {
         self.content = content()
         self.style = .primary
         self.attributes = []
         self.isPill = false
     }
 
-    init(style: BootrapStyle, isPill: Bool, attributes: [HTML.Attribute], content: View) {
+    init(style: BootstrapStyle, isPill: Conditionable, attributes: [HTML.Attribute], content: View) {
         self.style = style
         self.content = content
         self.attributes = attributes
@@ -30,18 +30,17 @@ public struct Badge : StaticView {
 
     public var body: View {
         Span { content }
-            .class("badge badge-\(style.rawValue)")
-            .class(IF(isPill) { "badge-pill" })
+            .class("badge badge-\(style.rawValue)" + IF(isPill) { " badge-pill" })
             .add(attributes: attributes)
     }
 
-    public func isPill(_ isPill: Bool) -> Badge {
+    public func isPill(_ isPill: Conditionable) -> Badge {
         .init(style: style, isPill: isPill, attributes: attributes, content: content)
     }
 }
 
-extension Badge : BootstrapStyleable {
-    public func style(_ style: BootrapStyle) -> Badge {
+extension Badge {
+    public func background(color style: BootstrapStyle) -> Badge {
         .init(style: style, isPill: isPill, attributes: attributes, content: content)
     }
 }
@@ -53,8 +52,7 @@ extension Badge : AttributeNode {
 }
 
 extension Anchor {
-    public func badge(style: BootrapStyle, isPill: Bool = false) -> Self {
-        self.class("badge badge-\(style.rawValue)")
-            .class(IF(isPill) { "badge-pill" })
+    public func badge(style: BootstrapStyle, isPill: Conditionable = false) -> Self {
+        self.class("badge badge-\(style.rawValue)" + IF(isPill) { " badge-pill" })
     }
 }

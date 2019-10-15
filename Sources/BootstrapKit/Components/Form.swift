@@ -7,11 +7,18 @@
 
 import HTMLKit
 
-public protocol FormInput : AttributeNode, GlobalAttributes {}
+public protocol FormInput : AttributeNode, NameableAttribute {}
 
-extension Input : FormInput {}
-extension Select : FormInput {}
-extension TextArea : FormInput {}
+extension Input: FormInput {}
+extension Select: FormInput {}
+extension TextArea: FormInput {}
+
+@_functionBuilder
+public class FormInputBuilder {
+    public static func buildBlock(_ children: FormInput...) -> FormInput {
+        return children.first ?? TextArea()
+    }
+}
 
 public struct FormGroup : StaticView {
 
@@ -43,13 +50,23 @@ public struct FormGroup : StaticView {
         self.optionalContent = nil
     }
 
+    public init(label: View, @FormInputBuilder input: () -> FormInput) {
+        self.label = Label { label }
+        self.input = input()
+        self.optionalContent = nil
+    }
+
     public var body: View {
         guard let inputId = input.value(of: "id") else {
             fatalError("Missing an id attribute on an Input in a FormGroup")
         }
+        var inputNode = input
+        if input.value(of: "name") == nil {
+            inputNode = input.name(inputId)
+        }
         return Div {
             label.for(inputId)
-            input.class("form-control")
+            inputNode.class("form-control")
             IF(optionalContent != nil) {
                 optionalContent ?? ""
             }
@@ -83,8 +100,7 @@ public struct InputGroup : StaticView {
                 }.class("input-group-append")
             }
         }
-            .class("input-group")
-            .class(IF(wrapInput == false) { " flex-nowrap" })
+            .class("input-group" + IF(wrapInput == false) { " flex-nowrap" })
     }
 
 
