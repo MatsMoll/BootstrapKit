@@ -7,21 +7,88 @@
 
 import HTMLKit
 
-public struct ProgressBar<T> : StaticView {
+public struct ProgressBar<A, B>: StaticView, AttributeNode where B: Comparable, B: View {
 
-    let valueRange: Range<Double>
-    let currentValue: TemplateValue<T, Double>
+    public var attributes: [HTML.Attribute] = []
+    let maxValue: B
+    let minValue: B
+    let currentValue: TemplateValue<A, B>
+    var barDiv: Div = Div()
+
+    public init(currentValue: TemplateValue<A, B>, valueRange: Range<B>) {
+        self.currentValue = currentValue
+        self.maxValue = valueRange.upperBound
+        self.minValue = valueRange.lowerBound
+    }
+
+    public init(currentValue: TemplateValue<A, B>, valueRange: ClosedRange<B>) {
+        self.currentValue = currentValue
+        self.maxValue = valueRange.upperBound
+        self.minValue = valueRange.lowerBound
+    }
+
+    init(currentValue: TemplateValue<A, B>, minValue: B, maxValue: B, barDiv: Div, attributes: [HTML.Attribute]) {
+        self.currentValue = currentValue
+        self.maxValue = maxValue
+        self.minValue = minValue
+        self.barDiv = barDiv
+        self.attributes = attributes
+    }
 
     public var body: View {
         Div {
-            Div {
-                ""
-            }
+            barDiv
                 .class("progress-bar")
                 .role("progressbar")
-                .aria(for: "valuemax", value: valueRange.upperBound)
-                .aria(for: "valuemin", value: valueRange.lowerBound)
+                .aria(for: "valuemax", value: maxValue)
+                .aria(for: "valuemin", value: minValue)
                 .aria(for: "valuenow", value: currentValue)
-        }.class("progress")
+                .style(css: "width: " + currentValue + "%;")
+        }
+        .class("progress")
+        .add(attributes: attributes)
+    }
+
+    public func bar(size: SizeClass) -> ProgressBar {
+        self.class("progress-\(size.rawValue)")
+    }
+
+    public func bar(style: BootstrapStyle) -> ProgressBar {
+        return .init(
+            currentValue: currentValue,
+            minValue: minValue,
+            maxValue: maxValue,
+            barDiv: barDiv.background(color: style),
+            attributes: attributes
+        )
+    }
+
+    public func bar(id: View) -> ProgressBar {
+        return .init(
+            currentValue: currentValue,
+            minValue: minValue,
+            maxValue: maxValue,
+            barDiv: barDiv.id(id),
+            attributes: attributes
+        )
+    }
+
+    public func copy(with attributes: [HTML.Attribute]) -> ProgressBar<A, B> {
+        return .init(currentValue: currentValue, minValue: minValue, maxValue: maxValue, barDiv: barDiv, attributes: attributes)
+    }
+
+    public func modify(if condition: Conditionable, modifyer: (ProgressBar<A, B>) -> ProgressBar<A, B>) -> ProgressBar<A, B> {
+        let emptyNode = ProgressBar(currentValue: currentValue, minValue: minValue, maxValue: maxValue, barDiv: barDiv.copy(with: []), attributes: [])
+        let modified = modifyer(emptyNode)
+        let modifiedBar = modified.barDiv.wrapAttributes(with: condition)
+        let modifiedAttributes = modified.wrapAttributes(with: condition)
+        return ProgressBar(
+            currentValue: currentValue,
+            minValue: minValue,
+            maxValue: maxValue,
+            barDiv: barDiv.add(attributes: modifiedBar),
+            attributes: attributes
+        )
+            .add(attributes: modifiedAttributes)
     }
 }

@@ -30,11 +30,13 @@ public struct Card : StaticView {
         Div {
             image?.class("card-img-top")
             Div { content }.class("card-body")
-        }.class("card")
+        }
+        .class("card")
+        .add(attributes: attributes)
     }
 }
 
-extension Card : AttributeNode {
+extension Card: AttributeNode {
     public func copy(with attributes: [HTML.Attribute]) -> Card {
         .init(image: image, content: content, attributes: attributes)
     }

@@ -18,24 +18,50 @@ public class NavigationBarBuilder {
 public protocol NavigationBarContent : View {}
 
 
-public struct NavigationBar : StaticView {
+public struct NavigationBar: StaticView, AttributeNode {
 
+    public enum Style: String {
+        case dark
+        case light
+    }
+
+    public var attributes: [HTML.Attribute] = []
     let expandOn: SizeClass
+    let style: Style
     let content: View
 
     public init(expandOn: SizeClass, @NavigationBarBuilder content: () -> View) {
         self.expandOn = expandOn
         self.content = content()
+        self.style = .light
+    }
+
+    init(expandOn: SizeClass, style: Style, content: View, attributes: [HTML.Attribute]) {
+        self.expandOn = expandOn
+        self.style = style
+        self.content = content
+        self.attributes = attributes
     }
 
     public var body: View {
         Nav {
             content
-        }.class("navbar navbar-expand-" + expandOn.rawValue)
+        }
+        .class("navbar navbar-expand-" + expandOn.rawValue + " navbar-\(style.rawValue)")
+        .add(attributes: attributes)
     }
 
-    public struct Brand : StaticView, NavigationBarContent {
+    public func navigationBar(style: Style) -> NavigationBar {
+        .init(expandOn: expandOn, style: style, content: content, attributes: attributes)
+    }
 
+    public func copy(with attributes: [HTML.Attribute]) -> NavigationBar {
+        .init(expandOn: expandOn, style: style, content: content, attributes: attributes)
+    }
+
+    public struct Brand: StaticView, NavigationBarContent, AttributeNode {
+
+        public var attributes: [HTML.Attribute] = []
         let link: View
         let content: View
 
@@ -44,14 +70,25 @@ public struct NavigationBar : StaticView {
             self.content = content()
         }
 
+        init(link: View, content: View, attributes: [HTML.Attribute]) {
+            self.link = link
+            self.content = content
+            self.attributes = attributes
+        }
+
         public var body: View {
             Anchor { content }
                 .class("navbar-brand")
                 .href(link)
+                .add(attributes: attributes)
+        }
+
+        public func copy(with attributes: [HTML.Attribute]) -> NavigationBar.Brand {
+            .init(link: link, content: content, attributes: attributes)
         }
     }
 
-    public struct Collapse : StaticView, NavigationBarContent {
+    public struct Collapse: StaticView, NavigationBarContent {
 
         let icon: View
         let content: View
@@ -76,7 +113,7 @@ public struct NavigationBar : StaticView {
                 Div {
                     UnorderdList {
                         content
-                    }.class("navbar-nav mr-auto")
+                    }.class("navbar-nav ml-auto")
                 }
                 .class("collapse navbar-collapse")
                 .id(id)

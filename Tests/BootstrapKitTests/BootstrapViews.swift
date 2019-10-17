@@ -42,7 +42,7 @@ struct ColumnView : StaticView {
             .columnWidth(3, for: .small)
             .columnWidth(6, for: .medium)
             .columnWidth(12)
-            .textAlignment(.left)
+            .text(alignment: .left)
     }
 }
 
@@ -54,13 +54,13 @@ struct AlertViewTest : StaticView {
                 "This is an importante message 1"
             }
                 .isDismissable(false)
-                .style(.dark)
+                .background(color: .dark)
             
             Alert {
                 "This is an importante message 2"
             }
                 .isDismissable(true)
-                .style(.success)
+                .background(color: .success)
             
             Alert {
                 "This is an importante message 3"
@@ -135,31 +135,30 @@ struct FormViewTest : TemplateView {
 
     var body: View {
         Container {
-            IF(context.loginError != nil) {
+            IF(context.loginError.isDefined) {
                 Alert {
                     context.loginError
                 }
-                    .isDismissable(true)
-                    .style(.danger)
-                    .margin(.bottom, size: 3)
+                .isDismissable(true)
+                .background(color: .danger)
+                .margin(.three, for: .bottom)
             }
             Form {
-                FormGroup(
-                    label: "Username",
+                FormGroup(label: "Username") {
                     Input(type: .text, id: "username")
-                )
+                }
                 FormGroup(
                     label: "Password",
                     Input(type: .password, id: "password")) {
                         Small { "Needs to contain ..." }
                 }
-                FormGroup(
-                    label: "Test",
+                FormGroup(label: "Test") {
                     Select(context.options) { option in
                         Text { option }
-                            .font(.heading5)
-                    }.id("test")
-                )
+                            .style(.heading5)
+                    }
+                    .id("test")
+                }
             }
         }
     }

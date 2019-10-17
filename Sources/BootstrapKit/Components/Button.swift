@@ -17,16 +17,16 @@ extension ButtonStylable where Self: GlobalAttributes {
     public func button(size: SizeClass) -> Self {
         size == .all ? self : self.class("btn-\(size.rawValue)")
     }
-    
+
     public func button(style: BootstrapStyle, isOutlined: Bool = false) -> Self {
         self.class("btn btn\(isOutlined ? "-outline" : "")-\(style.rawValue)")
     }
-    
+
     public func isActive(_ isActive: Bool) -> Self {
         isActive ? self.class("active") : self.class("disabled")
     }
 }
 
-extension Button : ButtonStylable {}
-extension Anchor : ButtonStylable {}
-extension Input : ButtonStylable {}
+extension Button: ButtonStylable {}
+extension Anchor: ButtonStylable {}
+extension Input: ButtonStylable {}

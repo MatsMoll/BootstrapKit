@@ -60,7 +60,7 @@ public struct Text: StaticView, AttributeNode {
         textView.add(attributes: attributes)
     }
 
-    var textView: AttributeNode {
+    var textView: AddableAttributeNode {
         switch style {
         case .display1, .display2, .display3, .display4:
             return H1 { content }.class(style.rawValue)

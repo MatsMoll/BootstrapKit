@@ -7,11 +7,13 @@
 
 import HTMLKit
 
-public protocol FormInput : AttributeNode, NameableAttribute {}
+public protocol FormInput : AddableAttributeNode {}
+protocol NamaableFormInput: FormInput, NameableAttribute {}
 
 extension Input: FormInput {}
 extension Select: FormInput {}
 extension TextArea: FormInput {}
+extension Div: FormInput {}
 
 @_functionBuilder
 public class FormInputBuilder {
@@ -20,8 +22,35 @@ public class FormInputBuilder {
     }
 }
 
-public struct FormGroup : StaticView {
+public struct FormRow : StaticView, AttributeNode {
 
+    public var attributes: [HTML.Attribute]
+    let content: View
+
+    public init(@HTMLBuilder content: () -> View) {
+        self.content = content()
+        self.attributes = []
+    }
+
+    init(attributes: [HTML.Attribute], content: View) {
+        self.attributes = attributes
+        self.content = content
+    }
+
+    public var body: View {
+        Div { content }
+            .class("form-row")
+            .add(attributes: attributes)
+    }
+
+    public func copy(with attributes: [HTML.Attribute]) -> FormRow {
+        .init(attributes: attributes, content: content)
+    }
+}
+
+public struct FormGroup: StaticView {
+
+    public var attributes: [HTML.Attribute] = []
     let label: Label
     let input: FormInput
     let optionalContent: View?
@@ -56,13 +85,27 @@ public struct FormGroup : StaticView {
         self.optionalContent = nil
     }
 
+    public init(label: View, @FormInputBuilder input: () -> FormInput, @HTMLBuilder optionalContent: () -> View) {
+        self.label = Label { label }
+        self.input = input()
+        self.optionalContent = optionalContent()
+    }
+
+    init(label: Label, input: FormInput, optionalContent: View?, attributes: [HTML.Attribute]) {
+        self.label = label
+        self.input = input
+        self.optionalContent = optionalContent
+        self.attributes = attributes
+    }
+
     public var body: View {
         guard let inputId = input.value(of: "id") else {
             fatalError("Missing an id attribute on an Input in a FormGroup")
         }
         var inputNode = input
-        if input.value(of: "name") == nil {
-            inputNode = input.name(inputId)
+        if input.value(of: "name") == nil,
+            let namable = input as? NamaableFormInput {
+            inputNode = namable.name(inputId)
         }
         return Div {
             label.for(inputId)
@@ -70,7 +113,15 @@ public struct FormGroup : StaticView {
             IF(optionalContent != nil) {
                 optionalContent ?? ""
             }
-        }.class("form-group")
+        }
+        .class("form-group")
+        .add(attributes: attributes)
+    }
+}
+
+extension FormGroup: AttributeNode {
+    public func copy(with attributes: [HTML.Attribute]) -> FormGroup {
+        .init(label: label, input: input, optionalContent: optionalContent, attributes: attributes)
     }
 }
 

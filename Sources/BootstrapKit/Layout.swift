@@ -79,6 +79,20 @@ public enum Alignment: String {
     case itemsCenter = "items-center"
 }
 
+public enum HorizontalAlignment: String {
+    case start
+    case center
+    case end
+    case around
+    case between
+}
+
+public enum VerticalAlignment: String {
+    case start
+    case center
+    case end
+}
+
 public enum SpacingSize: String {
     case zero = "0"
     case one = "1"
@@ -119,6 +133,10 @@ public enum WidthSize: String {
 }
 
 extension GlobalAttributes {
+    public func noGutters() -> Self {
+        self.class("no-gutters")
+    }
+
     public func columnWidth(_ width: Int, for sizeClass: SizeClass = .all) -> Self {
         switch sizeClass {
         case .all:  return self.class("col-\(width)")
@@ -155,6 +173,14 @@ extension GlobalAttributes {
 
     public func alignment(_ alignment: Alignment) -> Self {
         self.class("align-\(alignment.rawValue)")
+    }
+
+    public func vertical(alignment: VerticalAlignment) -> Self {
+        self.class("align-items-\(alignment.rawValue)")
+    }
+
+    public func horizontal(alignment: HorizontalAlignment) -> Self {
+        self.class("justify-content-\(alignment.rawValue)")
     }
 
     public func margin(_ size: SpacingSize, for direction: Direction = .all, sizeClass: SizeClass = .all) -> Self {
