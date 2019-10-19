@@ -8,7 +8,7 @@
 import HTMLKit
 
 
-public struct Text: StaticView, AttributeNode {
+public struct Text: StaticView, AttributeNode, LocalizableNode {
     
     public enum Style : String {
         case display1 = "display-1"
@@ -41,13 +41,22 @@ public struct Text: StaticView, AttributeNode {
     }
     
     let style: Style
-    public var attributes: [HTML.Attribute]
+    public var attributes: [HTML.Attribute] = []
     let content: View
+
+    public init(_ localizedKey: String) {
+        self.content = Localized(key: localizedKey)
+        self.style = .paragraph
+    }
+
+    public init<A, B>(_ localizedKey: String, with context: TemplateValue<A, B>) where B : Encodable {
+        self.content = Localized(key: localizedKey, context: context)
+        self.style = .paragraph
+    }
     
     public init(style: Style = .paragraph, @HTMLBuilder content: () -> View) {
         self.style = style
         self.content = content()
-        self.attributes = []
     }
     
     init(style: Style, attributes: [HTML.Attribute], content: View) {
