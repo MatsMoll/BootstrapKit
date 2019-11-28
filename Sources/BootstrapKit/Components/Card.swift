@@ -31,7 +31,7 @@ public struct Card : HTMLComponent {
 
     public var body: HTML {
         Div {
-            image?.class("card-img-top")
+//            image?.class("card-img-top")
             Div { content }.class("card-body")
             subBody ?? ""
         }
