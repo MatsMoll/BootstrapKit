@@ -8,7 +8,7 @@
 import HTMLKit
 
 public protocol FormInput : AddableAttributeNode {}
-protocol NamaableFormInput: FormInput, NameableAttribute {}
+protocol NameableFormInput: FormInput {}
 
 extension Input: FormInput {}
 extension Select: FormInput {}
@@ -22,40 +22,40 @@ public class FormInputBuilder {
     }
 }
 
-public struct FormRow : StaticView, AttributeNode {
+public struct FormRow : HTMLComponent, AttributeNode {
 
-    public var attributes: [HTML.Attribute]
-    let content: View
+    public var attributes: [HTMLAttribute]
+    let content: HTML
 
-    public init(@HTMLBuilder content: () -> View) {
+    public init(@HTMLBuilder content: () -> HTML) {
         self.content = content()
         self.attributes = []
     }
 
-    init(attributes: [HTML.Attribute], content: View) {
+    init(attributes: [HTMLAttribute], content: HTML) {
         self.attributes = attributes
         self.content = content
     }
 
-    public var body: View {
+    public var body: HTML {
         Div { content }
             .class("form-row")
             .add(attributes: attributes)
     }
 
-    public func copy(with attributes: [HTML.Attribute]) -> FormRow {
+    public func copy(with attributes: [HTMLAttribute]) -> FormRow {
         .init(attributes: attributes, content: content)
     }
 }
 
-public struct FormGroup: StaticView {
+public struct FormGroup: HTMLComponent {
 
-    public var attributes: [HTML.Attribute] = []
+    public var attributes: [HTMLAttribute] = []
     let label: Label
     let input: FormInput
-    let optionalContent: View?
+    let optionalContent: HTML?
 
-    public init(_ label: Label, _ input: FormInput, @HTMLBuilder optionalContent: () -> View) {
+    public init(_ label: Label, _ input: FormInput, @HTMLBuilder optionalContent: () -> HTML) {
         self.label = label
         self.input = input
         self.optionalContent = optionalContent()
@@ -67,45 +67,45 @@ public struct FormGroup: StaticView {
         self.optionalContent = nil
     }
 
-    public init(label: View, _ input: FormInput, @HTMLBuilder optionalContent: () -> View) {
+    public init(label: HTML, _ input: FormInput, @HTMLBuilder optionalContent: () -> HTML) {
         self.label = Label { label }
         self.input = input
         self.optionalContent = optionalContent()
     }
 
-    public init(label: View, _ input: FormInput) {
+    public init(label: HTML, _ input: FormInput) {
         self.label = Label { label }
         self.input = input
         self.optionalContent = nil
     }
 
-    public init(label: View, @FormInputBuilder input: () -> FormInput) {
+    public init(label: HTML, @FormInputBuilder input: () -> FormInput) {
         self.label = Label { label }
         self.input = input()
         self.optionalContent = nil
     }
 
-    public init(label: View, @FormInputBuilder input: () -> FormInput, @HTMLBuilder optionalContent: () -> View) {
+    public init(label: HTML, @FormInputBuilder input: () -> FormInput, @HTMLBuilder optionalContent: () -> HTML) {
         self.label = Label { label }
         self.input = input()
         self.optionalContent = optionalContent()
     }
 
-    init(label: Label, input: FormInput, optionalContent: View?, attributes: [HTML.Attribute]) {
+    init(label: Label, input: FormInput, optionalContent: HTML?, attributes: [HTMLAttribute]) {
         self.label = label
         self.input = input
         self.optionalContent = optionalContent
         self.attributes = attributes
     }
 
-    public var body: View {
+    public var body: HTML {
         guard let inputId = input.value(of: "id") else {
             fatalError("Missing an id attribute on an Input in a FormGroup")
         }
         var inputNode = input
         if input.value(of: "name") == nil,
-            let namable = input as? NamaableFormInput {
-            inputNode = namable.name(inputId)
+            let namable = input as? NameableFormInput {
+            inputNode = namable.add(.init(attribute: "name", value: inputId), withSpace: false)
         }
         return Div {
             label.for(inputId)
@@ -120,22 +120,45 @@ public struct FormGroup: StaticView {
 }
 
 extension FormGroup: AttributeNode {
-    public func copy(with attributes: [HTML.Attribute]) -> FormGroup {
+    public func copy(with attributes: [HTMLAttribute]) -> FormGroup {
         .init(label: label, input: input, optionalContent: optionalContent, attributes: attributes)
     }
 }
 
 
-public protocol InputGroupAddons : View {}
+public protocol InputGroupAddons : HTML {}
 
-public struct InputGroup : StaticView {
+public struct InputGroup : HTMLComponent, AttributeNode {
 
     let prepend: InputGroupAddons?
     let append: InputGroupAddons?
-    let input: Input
+    let invalidFeedback: HTML?
+    let validFeedback: HTML?
+    let input: AddableAttributeNode
     let wrapInput: Bool
+    public let attributes: [HTMLAttribute]
 
-    public var body: View {
+    public init(wrapInput: Bool = true, input: () -> AddableAttributeNode) {
+        self.wrapInput = wrapInput
+        self.input = input()
+        self.invalidFeedback = nil
+        self.validFeedback = nil
+        self.prepend = nil
+        self.append = nil
+        self.attributes = []
+    }
+
+    init(wrapInput: Bool, input: AddableAttributeNode, prepend: InputGroupAddons?, append: InputGroupAddons?, invalidFeedback: HTML?, validFeedback: HTML?, attributes: [HTMLAttribute]) {
+        self.wrapInput = wrapInput
+        self.input = input
+        self.invalidFeedback = invalidFeedback
+        self.validFeedback = validFeedback
+        self.prepend = prepend
+        self.append = append
+        self.attributes = attributes
+    }
+
+    public var body: HTML {
         Div {
             IF(prepend != nil) {
                 Div {
@@ -143,23 +166,46 @@ public struct InputGroup : StaticView {
                 }.class("input-group-prepend")
             }
 
-            input.class("form-controll")
+            input.class("form-control")
 
             IF(append != nil) {
                 Div {
                     append ?? None()
                 }.class("input-group-append")
             }
+            IF(invalidFeedback != nil) {
+                Div {
+                    invalidFeedback ?? ""
+                }.class("invalid-feedback")
+            }
+            IF(validFeedback != nil) {
+                Div {
+                    validFeedback ?? ""
+                }.class("valid-feedback")
+            }
         }
-            .class("input-group" + IF(wrapInput == false) { " flex-nowrap" })
+        .class("input-group" + IF(wrapInput == false) { " flex-nowrap" })
+        .add(attributes: attributes)
+    }
+
+    public func invalidFeedback(@HTMLBuilder _ feedback: () -> HTML) -> InputGroup {
+        InputGroup(wrapInput: wrapInput, input: input, prepend: prepend, append: append, invalidFeedback: feedback(), validFeedback: validFeedback, attributes: attributes)
+    }
+
+    public func validFeedback(@HTMLBuilder _ feedback: () -> HTML) -> InputGroup {
+        InputGroup(wrapInput: wrapInput, input: input, prepend: prepend, append: append, invalidFeedback: invalidFeedback, validFeedback: feedback(), attributes: attributes)
+    }
+
+    public func copy(with attributes: [HTMLAttribute]) -> InputGroup {
+        InputGroup(wrapInput: wrapInput, input: input, prepend: prepend, append: append, invalidFeedback: invalidFeedback, validFeedback: validFeedback, attributes: attributes)
     }
 
 
-    struct None: StaticView {
-        var body: View { "" }
+    struct None: HTMLComponent {
+        var body: HTML { "" }
     }
 
-    public struct Text: StaticView {
+    public struct Text: HTMLComponent {
 
         let text: String
 
@@ -167,7 +213,7 @@ public struct InputGroup : StaticView {
             self.text = text
         }
 
-        public var body: View {
+        public var body: HTML {
             Span {
                 text
             }.class("input-group-text")

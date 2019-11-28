@@ -1,18 +1,18 @@
 import HTMLKit
 
-public struct BootstrapPage : StaticView {
+public struct BootstrapPage : HTMLComponent {
 
-    let content: View
+    let content: HTML
 
-    public init(@HTMLBuilder content: () -> View) {
+    public init(@HTMLBuilder content: () -> HTML) {
         self.content = content()
     }
 
-    public var body: View {
+    public var body: HTML {
         HTMLNode {
             Head {
                 Link()
-                    .relationship("stylesheet")
+                    .relationship(.stylesheet)
                     .href("https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
             }
             Body {
@@ -208,62 +208,62 @@ extension GlobalAttributes {
     }
 }
 
-public struct Container : StaticView, AttributeNode {
+public struct Container : HTMLComponent, AttributeNode {
 
     public enum Mode : String {
         case fluid = "-fluid"
         case snap = ""
     }
 
-    public var attributes: [HTML.Attribute]
+    public var attributes: [HTMLAttribute]
     let mode: Mode
-    let content: View
+    let content: HTML
 
-    public init(mode: Mode = .snap, @HTMLBuilder content: () -> View) {
+    public init(mode: Mode = .snap, @HTMLBuilder content: () -> HTML) {
         self.mode = mode
         self.attributes = []
         self.content = content()
     }
 
-    init(mode: Mode, attributes: [HTML.Attribute] = [], content: View) {
+    init(mode: Mode, attributes: [HTMLAttribute] = [], content: HTML) {
         self.mode = mode
         self.attributes = attributes
         self.content = content
     }
 
-    public var body: View {
+    public var body: HTML {
         Div { content }
             .class("container" + mode.rawValue)
             .add(attributes: attributes)
     }
 
-    public func copy(with attributes: [HTML.Attribute]) -> Container {
+    public func copy(with attributes: [HTMLAttribute]) -> Container {
         .init(mode: mode, attributes: attributes, content: content)
     }
 }
 
-public struct Row : StaticView, AttributeNode {
+public struct Row : HTMLComponent, AttributeNode {
 
-    public var attributes: [HTML.Attribute]
-    let content: View
+    public var attributes: [HTMLAttribute]
+    let content: HTML
 
-    public init(@HTMLBuilder content: () -> View) {
+    public init(@HTMLBuilder content: () -> HTML) {
         self.content = content()
         self.attributes = []
     }
 
-    init(attributes: [HTML.Attribute], content: View) {
+    init(attributes: [HTMLAttribute], content: HTML) {
         self.attributes = attributes
         self.content = content
     }
 
-    public var body: View {
+    public var body: HTML {
         Div { content }
             .class("row")
             .add(attributes: attributes)
     }
 
-    public func copy(with attributes: [HTML.Attribute]) -> Row {
+    public func copy(with attributes: [HTMLAttribute]) -> Row {
         .init(attributes: attributes, content: content)
     }
 }

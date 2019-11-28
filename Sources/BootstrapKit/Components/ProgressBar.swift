@@ -7,9 +7,9 @@
 
 import HTMLKit
 
-public struct ProgressBar<A, B>: StaticView, AttributeNode where B: Comparable, B: View {
+public struct ProgressBar<A, B>: HTMLComponent, AttributeNode where B: Comparable, B: HTML {
 
-    public var attributes: [HTML.Attribute] = []
+    public var attributes: [HTMLAttribute] = []
     let maxValue: B
     let minValue: B
     let currentValue: TemplateValue<A, B>
@@ -27,7 +27,7 @@ public struct ProgressBar<A, B>: StaticView, AttributeNode where B: Comparable, 
         self.minValue = valueRange.lowerBound
     }
 
-    init(currentValue: TemplateValue<A, B>, minValue: B, maxValue: B, barDiv: Div, attributes: [HTML.Attribute]) {
+    init(currentValue: TemplateValue<A, B>, minValue: B, maxValue: B, barDiv: Div, attributes: [HTMLAttribute]) {
         self.currentValue = currentValue
         self.maxValue = maxValue
         self.minValue = minValue
@@ -35,7 +35,7 @@ public struct ProgressBar<A, B>: StaticView, AttributeNode where B: Comparable, 
         self.attributes = attributes
     }
 
-    public var body: View {
+    public var body: HTML {
         Div {
             barDiv
                 .class("progress-bar")
@@ -63,7 +63,7 @@ public struct ProgressBar<A, B>: StaticView, AttributeNode where B: Comparable, 
         )
     }
 
-    public func bar(id: View) -> ProgressBar {
+    public func bar(id: HTML) -> ProgressBar {
         return .init(
             currentValue: currentValue,
             minValue: minValue,
@@ -73,7 +73,7 @@ public struct ProgressBar<A, B>: StaticView, AttributeNode where B: Comparable, 
         )
     }
 
-    public func copy(with attributes: [HTML.Attribute]) -> ProgressBar<A, B> {
+    public func copy(with attributes: [HTMLAttribute]) -> ProgressBar<A, B> {
         return .init(currentValue: currentValue, minValue: minValue, maxValue: maxValue, barDiv: barDiv, attributes: attributes)
     }
 

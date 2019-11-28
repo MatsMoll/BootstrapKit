@@ -7,37 +7,49 @@
 
 import HTMLKit
 
-public struct Card : StaticView {
+public struct Card : HTMLComponent {
 
-    public var attributes: [HTML.Attribute]
+    public var attributes: [HTMLAttribute]
 
     let image: Img?
-    let content: View
+    let content: HTML
+    let subBody: HTML?
 
-    public init(image: Img? = nil, @HTMLBuilder content: () -> View) {
-        self.image = image
+    public init(@HTMLBuilder content: () -> HTML) {
+        self.image = nil
         self.content = content()
+        self.subBody = nil
         self.attributes = []
     }
 
-    init(image: Img?, content: View, attributes: [HTML.Attribute]) {
+    init(image: Img?, content: HTML, subBody: HTML?, attributes: [HTMLAttribute]) {
         self.image = image
         self.content = content
+        self.subBody = subBody
         self.attributes = attributes
     }
 
-    public var body: View {
+    public var body: HTML {
         Div {
             image?.class("card-img-top")
             Div { content }.class("card-body")
+            subBody ?? ""
         }
         .class("card")
         .add(attributes: attributes)
     }
+
+    public func image(_ image: Img) -> Card {
+        Card(image: image, content: content, subBody: subBody, attributes: attributes)
+    }
+
+    public func sub(@HTMLBuilder body subBody: () -> HTML) -> Card {
+        Card(image: image, content: content, subBody: subBody(), attributes: attributes)
+    }
 }
 
 extension Card: AttributeNode {
-    public func copy(with attributes: [HTML.Attribute]) -> Card {
-        .init(image: image, content: content, attributes: attributes)
+    public func copy(with attributes: [HTMLAttribute]) -> Card {
+        .init(image: image, content: content, subBody: subBody, attributes: attributes)
     }
 }

@@ -10,19 +10,25 @@ let package = Package(
         .library(
             name: "BootstrapKit",
             targets: ["BootstrapKit"]),
+//        .library(
+//            name: "BootstrapKitVapor",
+//            targets: ["BootstrapKitVapor"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-//        .package(path: "../HTMLKit")
-        .package(url: "https://github.com/vapor-community/HTMLKit", from: "2.0.0-alpha.1")
+        .package(path: "../HTMLKit")
+//        .package(url: "https://github.com/vapor-community/HTMLKit", from: "2.0.0-alpha.1")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "BootstrapKit",
-            dependencies: ["HTMLKit"]),
+            dependencies: ["HTMLKit", "HTMLKitVapor"]),
+//        .target(
+//            name: "BootstrapKitVapor",
+//            dependencies: ["BootstrapKit", "HTMLKitVapor"]),
         .testTarget(
             name: "BootstrapKitTests",
             dependencies: ["BootstrapKit"]),

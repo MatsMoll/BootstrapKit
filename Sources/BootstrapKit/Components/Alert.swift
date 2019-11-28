@@ -7,28 +7,28 @@
 
 import HTMLKit
 
-public struct Alert : StaticView {
+public struct Alert: HTMLComponent {
 
-    public var attributes: [HTML.Attribute]
-    let content: View
+    public var attributes: [HTMLAttribute]
+    let content: HTML
     let isDisimissable: Conditionable
     let style: BootstrapStyle
 
-    public init(@HTMLBuilder content: () -> View) {
+    public init(@HTMLBuilder content: () -> HTML) {
         self.isDisimissable = true
         self.content = content()
         self.attributes = []
         self.style = .primary
     }
 
-    init(isDisimissable: Conditionable, style: BootstrapStyle, attributes: [HTML.Attribute], content: View) {
+    init(isDisimissable: Conditionable, style: BootstrapStyle, attributes: [HTMLAttribute], content: HTML) {
         self.attributes = attributes
         self.content = content
         self.isDisimissable = isDisimissable
         self.style = style
     }
 
-    public var body: View {
+    public var body: HTML {
         Div {
             content
             IF(isDisimissable) {
@@ -53,7 +53,7 @@ public struct Alert : StaticView {
 }
 
 extension Alert : AttributeNode {
-    public func copy(with attributes: [HTML.Attribute]) -> Alert {
+    public func copy(with attributes: [HTMLAttribute]) -> Alert {
         .init(isDisimissable: isDisimissable, style: style, attributes: attributes, content: content)
     }
 }

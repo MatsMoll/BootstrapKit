@@ -7,9 +7,9 @@
 
 import HTMLKit
 
-public struct Navigation : StaticView {
+public struct Navigation : HTMLComponent {
 
-    public var body: View {
+    public var body: HTML {
         ""
     }
 }

@@ -10,40 +10,40 @@ import HTMLKit
 @_functionBuilder
 public class NavigationBarBuilder {
 
-    public static func buildBlock(_ children: NavigationBarContent...) -> View {
+    public static func buildBlock(_ children: NavigationBarContent...) -> HTML {
         return children.reduce([], +)
     }
 }
 
-public protocol NavigationBarContent : View {}
+public protocol NavigationBarContent : HTML {}
 
 
-public struct NavigationBar: StaticView, AttributeNode {
+public struct NavigationBar: HTMLComponent, AttributeNode {
 
     public enum Style: String {
         case dark
         case light
     }
 
-    public var attributes: [HTML.Attribute] = []
+    public var attributes: [HTMLAttribute] = []
     let expandOn: SizeClass
     let style: Style
-    let content: View
+    let content: HTML
 
-    public init(expandOn: SizeClass, @NavigationBarBuilder content: () -> View) {
+    public init(expandOn: SizeClass, @NavigationBarBuilder content: () -> HTML) {
         self.expandOn = expandOn
         self.content = content()
         self.style = .light
     }
 
-    init(expandOn: SizeClass, style: Style, content: View, attributes: [HTML.Attribute]) {
+    init(expandOn: SizeClass, style: Style, content: HTML, attributes: [HTMLAttribute]) {
         self.expandOn = expandOn
         self.style = style
         self.content = content
         self.attributes = attributes
     }
 
-    public var body: View {
+    public var body: HTML {
         Nav {
             content
         }
@@ -55,69 +55,70 @@ public struct NavigationBar: StaticView, AttributeNode {
         .init(expandOn: expandOn, style: style, content: content, attributes: attributes)
     }
 
-    public func copy(with attributes: [HTML.Attribute]) -> NavigationBar {
+    public func copy(with attributes: [HTMLAttribute]) -> NavigationBar {
         .init(expandOn: expandOn, style: style, content: content, attributes: attributes)
     }
 
-    public struct Brand: StaticView, NavigationBarContent, AttributeNode {
+    public struct Brand: HTMLComponent, NavigationBarContent, AttributeNode {
 
-        public var attributes: [HTML.Attribute] = []
-        let link: View
-        let content: View
+        public var attributes: [HTMLAttribute] = []
+        let link: HTML
+        let content: HTML
 
-        public init(link: View = "#", @HTMLBuilder content: () -> View) {
+        public init(link: HTML = "#", @HTMLBuilder content: () -> HTML) {
             self.link = link
             self.content = content()
         }
 
-        init(link: View, content: View, attributes: [HTML.Attribute]) {
+        init(link: HTML, content: HTML, attributes: [HTMLAttribute]) {
             self.link = link
             self.content = content
             self.attributes = attributes
         }
 
-        public var body: View {
+        public var body: HTML {
             Anchor { content }
                 .class("navbar-brand")
                 .href(link)
                 .add(attributes: attributes)
         }
 
-        public func copy(with attributes: [HTML.Attribute]) -> NavigationBar.Brand {
+        public func copy(with attributes: [HTMLAttribute]) -> NavigationBar.Brand {
             .init(link: link, content: content, attributes: attributes)
         }
     }
 
-    public struct Collapse: StaticView, NavigationBarContent {
+    public struct Collapse: HTMLComponent, NavigationBarContent {
 
-        let icon: View
-        let content: View
+        let button: AddableAttributeNode
+        let content: HTML
         let id: String
 
-        public init(icon: View = Span().class("navbar-toggler-icon"), id: String = "navbarSupportedContent", @HTMLBuilder content: () -> View) {
-            self.icon = icon
+        public init(button: AddableAttributeNode? = nil, id: String = "navbarResponsive", @HTMLBuilder content: () -> HTML) {
             self.content = content()
             self.id = id
-        }
-
-        public var body: View {
-            Button { icon }
+            self.button = button ?? Button {
+                Span().class("navbar-toggler-icon")
+            }
                 .type(.button)
                 .class("navbar-toggler")
+                .aria(for: "label", value: "Toggle navigation")
+        }
+
+        public var body: HTML {
+            button
                 .data(for: "toggle", value: "collapse")
                 .aria(for: "expanded", value: false)
-                .aria(for: "label", value: "Toggle navigation")
-                .aria(for: "target", value: HTML.Identifier.id(id))
-                .aria(for: "controls", value: id)
-                +
-                Div {
-                    UnorderdList {
-                        content
-                    }.class("navbar-nav ml-auto")
+                .aria(for: "target", value: HTMLIdentifier.id(id))
+                .aria(for: "controls", value: id) +
+            Div {
+                UnorderdList {
+                    content
                 }
-                .class("collapse navbar-collapse")
-                .id(id)
-
+                .class("navbar-nav ml-auto")
+            }
+            .class("collapse navbar-collapse")
+            .id(id)
         }
     }
 }

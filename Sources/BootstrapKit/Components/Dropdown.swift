@@ -7,37 +7,37 @@
 
 import HTMLKit
 
-public struct Dropdown : StaticView {
+public struct Dropdown : HTMLComponent {
 
-    public var body: View {
+    public var body: HTML {
         ""
     }
 }
 
 
-public struct DropdownLink : StaticView, AttributeNode {
+public struct DropdownLink : HTMLComponent, AttributeNode {
 
-    public var attributes: [HTML.Attribute]
+    public var attributes: [HTMLAttribute]
     let content: Anchor
 
-    public init(link: View, @HTMLBuilder content: () -> View) {
+    public init(link: HTML, @HTMLBuilder content: () -> HTML) {
         self.content = Anchor.init(attributes: [], content: content())
             .href(link)
         self.attributes = []
     }
 
-    init(attributes: [HTML.Attribute], content: Anchor) {
+    init(attributes: [HTMLAttribute], content: Anchor) {
         self.content = content
         self.attributes = attributes
     }
 
-    public var body: View {
+    public var body: HTML {
         content
             .add(attributes: attributes)
             .class("dropdown-item")
     }
 
-    public func copy(with attributes: [HTML.Attribute]) -> DropdownLink {
+    public func copy(with attributes: [HTMLAttribute]) -> DropdownLink {
         .init(attributes: attributes, content: content)
     }
 }

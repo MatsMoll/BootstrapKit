@@ -7,47 +7,44 @@
 
 import HTMLKit
 
-public struct Badge : StaticView {
+public struct Badge : HTMLComponent {
 
-    public var attributes: [HTML.Attribute]
-    let style: BootstrapStyle
-    let content: View
+    public var attributes: [HTMLAttribute]
+    let content: HTML
     let isPill: Conditionable
 
-    public init(@HTMLBuilder content: () -> View) {
+    public init(@HTMLBuilder content: () -> HTML) {
         self.content = content()
-        self.style = .primary
         self.attributes = []
         self.isPill = false
     }
 
-    init(style: BootstrapStyle, isPill: Conditionable, attributes: [HTML.Attribute], content: View) {
-        self.style = style
+    init(isPill: Conditionable, attributes: [HTMLAttribute], content: HTML) {
         self.content = content
         self.attributes = attributes
         self.isPill = isPill
     }
 
-    public var body: View {
+    public var body: HTML {
         Span { content }
-            .class("badge badge-\(style.rawValue)" + IF(isPill) { " badge-pill" })
+            .class("badge" + IF(isPill) { " badge-pill" })
             .add(attributes: attributes)
     }
 
     public func isPill(_ isPill: Conditionable) -> Badge {
-        .init(style: style, isPill: isPill, attributes: attributes, content: content)
+        .init(isPill: isPill, attributes: attributes, content: content)
     }
 }
 
 extension Badge {
     public func background(color style: BootstrapStyle) -> Badge {
-        .init(style: style, isPill: isPill, attributes: attributes, content: content)
+        self.class("badge-\(style.rawValue)")
     }
 }
 
 extension Badge : AttributeNode {
-    public func copy(with attributes: [HTML.Attribute]) -> Badge {
-        .init(style: style, isPill: isPill, attributes: attributes, content: content)
+    public func copy(with attributes: [HTMLAttribute]) -> Badge {
+        .init(isPill: isPill, attributes: attributes, content: content)
     }
 }
 

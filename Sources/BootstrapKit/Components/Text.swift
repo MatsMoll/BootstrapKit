@@ -8,7 +8,7 @@
 import HTMLKit
 
 
-public struct Text: StaticView, AttributeNode, LocalizableNode {
+public struct Text: HTMLComponent, AttributeNode, LocalizableNode {
     
     public enum Style : String {
         case display1 = "display-1"
@@ -41,8 +41,8 @@ public struct Text: StaticView, AttributeNode, LocalizableNode {
     }
     
     let style: Style
-    public var attributes: [HTML.Attribute] = []
-    let content: View
+    public var attributes: [HTMLAttribute] = []
+    let content: HTML
 
     public init(_ localizedKey: String) {
         self.content = Localized(key: localizedKey)
@@ -54,19 +54,19 @@ public struct Text: StaticView, AttributeNode, LocalizableNode {
         self.style = .paragraph
     }
     
-    public init(style: Style = .paragraph, @HTMLBuilder content: () -> View) {
+    public init(style: Style = .paragraph, @HTMLBuilder content: () -> HTML) {
         self.style = style
         self.content = content()
     }
     
-    init(style: Style, attributes: [HTML.Attribute], content: View) {
+    init(style: Style, attributes: [HTMLAttribute], content: HTML) {
         self.style = style
         self.attributes = attributes
         self.content = content
     }
     
-    public var body: View {
-        textView.add(attributes: attributes)
+    public var body: HTML {
+        textView.add(attributes: attributes, withSpace: true)
     }
 
     var textView: AddableAttributeNode {
@@ -98,7 +98,7 @@ public struct Text: StaticView, AttributeNode, LocalizableNode {
         }
     }
     
-    public func copy(with attributes: [HTML.Attribute]) -> Text {
+    public func copy(with attributes: [HTMLAttribute]) -> Text {
         .init(style: style, attributes: attributes, content: content)
     }
 
