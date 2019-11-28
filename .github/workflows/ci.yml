@@ -5,7 +5,7 @@ on: [push]
 jobs:
   swift-bionic-job:
     container: 
-      image: vapor/swift:5.1.2-bionic
+      image: swift:5.1.2-bionic
     
     runs-on: ${{ matrix.os }}
     strategy:
