@@ -3,28 +3,26 @@ name: CI
 on: [push]
 
 jobs:
-  build:
-
+  swift-bionic-job:
+    container: 
+      image: vapor/swift:5.1-bionic
+    
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-18.04]
-
+        
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@master
     - name: Run unit tests
       run: |
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-            swift test
-        else
-          docker build --tag unit-tests -f unitTests.dockerfile .
-          docker run unit-tests
-        fi
+        apt-get -qq update && apt-get install -y \
+          libssl-dev zlib1g-dev \
+          && rm -r /var/lib/apt/lists/*
+        swift test
     - name: Build library in release mode
       run: |
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-            swift build -c release
-        else
-          docker build --tag release-library -f releaseLibrary.dockerfile .
-          docker run release-library
-        fi
+        apt-get -qq update && apt-get install -y \
+          libssl-dev zlib1g-dev \
+          && rm -r /var/lib/apt/lists/*
+        swift build -c release
