@@ -8,9 +8,12 @@
 import BootstrapKit
 import HTMLKit
 
+typealias StaticView = HTMLComponent
+typealias TemplateView = HTMLTemplate
+
 struct TextView : StaticView {
     
-    var body: View {
+    var body: HTML {
         Container {
             Text(style: .display1) { "d1" }
             Text(style: .display2) { "d2" }
@@ -35,7 +38,7 @@ struct TextView : StaticView {
 
 struct ColumnView : StaticView {
     
-    var body: View {
+    var body: HTML {
         Container {
             Text { "Hello World!" }
         }
@@ -48,7 +51,7 @@ struct ColumnView : StaticView {
 
 struct AlertViewTest : StaticView {
     
-    var body: View {
+    var body: HTML {
         Container(mode: .fluid) {
             Alert {
                 "This is an importante message 1"
@@ -73,7 +76,7 @@ struct BreadcrumbViewTest : TemplateView {
     
     var context: RootValue<String> = .root()
     
-    var body: View {
+    var body: HTML {
         Breadcrumb {
             BreadcrumbItem(uri: "#", title: "Title 1")
             BreadcrumbItem(uri: "#", title: "Title 2", isActive: context.isEmpty == false)
@@ -83,13 +86,14 @@ struct BreadcrumbViewTest : TemplateView {
 
 struct CardViewTest : StaticView {
 
-    var body: View {
+    var body: HTML {
         Container {
             Card {
                 Text(style: .cardTitle) { "Hello!" }
                 Text(style: .cardText) { "Some text" }
             }
-            Card(image: Img(source: "#")) {
+            Card {
+                Img(source: "#")
                 Text(style: .cardTitle) { "Hello!" }
                 Text(style: .cardText) { "Some text" }
             }
@@ -102,7 +106,7 @@ struct AccordionViewTest : TemplateView {
 
     let context: RootValue<[Subscription]> = .root()
 
-    var body: View {
+    var body: HTML {
         Container {
             ForEach(in: context) { sub in
                 sub.description.unsafelyUnwrapped.count
@@ -133,7 +137,7 @@ struct FormViewTest : TemplateView {
 
     let context: RootValue<LoginContext> = .root()
 
-    var body: View {
+    var body: HTML {
         Container {
             IF(context.loginError.isDefined) {
                 Alert {
@@ -168,7 +172,7 @@ struct ListGroupTest: TemplateView {
 
     var context: RootValue<[Subscription]> = .root()
 
-    var body: View {
+    var body: HTML {
         Div {
             ListGroup(context) { value in
                 Text {
@@ -186,7 +190,7 @@ struct ListGroupTest: TemplateView {
 
 struct RootView: StaticView {
 
-    var body: View {
+    var body: HTML {
         NavigationBar(expandOn: .medium) {
             NavigationBar.Brand(link: "#") {
                 "Test"
