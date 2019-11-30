@@ -54,8 +54,13 @@ public struct Text: HTMLComponent, AttributeNode, LocalizableNode {
         self.style = .paragraph
     }
     
-    public init(style: Style = .paragraph, @HTMLBuilder content: () -> HTML) {
+    public init(style: Style, @HTMLBuilder content: () -> HTML) {
         self.style = style
+        self.content = content()
+    }
+
+    public init(@HTMLBuilder content: () -> HTML) {
+        self.style = .paragraph
         self.content = content()
     }
     
