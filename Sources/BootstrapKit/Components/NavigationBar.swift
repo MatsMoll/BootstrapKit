@@ -30,8 +30,8 @@ public struct NavigationBar: HTMLComponent, AttributeNode {
     let style: Style
     let content: HTML
 
-    public init(expandOn: SizeClass, @NavigationBarBuilder content: () -> HTML) {
-        self.expandOn = expandOn
+    public init(@HTMLBuilder content: () -> HTML) {
+        self.expandOn = .large
         self.content = content()
         self.style = .light
     }
@@ -49,6 +49,10 @@ public struct NavigationBar: HTMLComponent, AttributeNode {
         }
         .class("navbar navbar-expand-" + expandOn.rawValue + " navbar-\(style.rawValue)")
         .add(attributes: attributes)
+    }
+
+    public func expandOn(_ expandOn: SizeClass) -> NavigationBar {
+        .init(expandOn: expandOn, style: style, content: content, attributes: attributes)
     }
 
     public func navigationBar(style: Style) -> NavigationBar {
@@ -94,15 +98,29 @@ public struct NavigationBar: HTMLComponent, AttributeNode {
         let content: HTML
         let id: String
 
-        public init(button: AddableAttributeNode? = nil, id: String = "navbarResponsive", @HTMLBuilder content: () -> HTML) {
+        public init(@HTMLBuilder content: () -> HTML) {
             self.content = content()
-            self.id = id
-            self.button = button ?? Button {
+            self.id = "navbarResponsive"
+            self.button = Button {
                 Span().class("navbar-toggler-icon")
             }
                 .type(.button)
                 .class("navbar-toggler")
                 .aria(for: "label", value: "Toggle navigation")
+        }
+
+        init(button: AddableAttributeNode, id: String, content: HTML) {
+            self.button = button
+            self.id = id
+            self.content = content
+        }
+
+        public func button(button: () -> AddableAttributeNode) -> Collapse {
+            .init(button: button(), id: id, content: content)
+        }
+
+        public func id(_ id: String) -> Collapse {
+            .init(button: button, id: id, content: content)
         }
 
         public var body: HTML {
