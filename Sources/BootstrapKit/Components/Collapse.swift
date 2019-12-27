@@ -16,6 +16,8 @@ extension Collapsable where Self: AttributeNode {
     public func collapse(_ identifier: HTMLIdentifier) -> Self {
         self.data(for: "toggle", value: "collapse")
             .add(.init(attribute: "href", value: identifier))
+            .data(for: "target", value: identifier)
+            .aria(for: "controls", value: identifier)
     }
 }
 
@@ -53,7 +55,6 @@ public struct Accordion : HTMLComponent {
                 }
             }
                 .class("card-header")
-                .id(id)
         }
     }
 

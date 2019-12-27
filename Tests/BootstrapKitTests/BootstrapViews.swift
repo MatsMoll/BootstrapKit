@@ -191,7 +191,7 @@ struct ListGroupTest: TemplateView {
 struct RootView: StaticView {
 
     var body: HTML {
-        NavigationBar(expandOn: .medium) {
+        NavigationBar {
             NavigationBar.Brand(link: "#") {
                 "Test"
             }
@@ -199,6 +199,7 @@ struct RootView: StaticView {
                 ""
             }
         }
+        .expandOn(.medium)
     }
 }
 
