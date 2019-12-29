@@ -7,27 +7,27 @@
 
 import HTMLKit
 
-public struct ProgressBar<A, B>: HTMLComponent, AttributeNode where B: Comparable, B: HTML {
+public struct ProgressBar<B>: HTMLComponent, AttributeNode where B: Comparable, B: HTML {
 
     public var attributes: [HTMLAttribute] = []
     let maxValue: B
     let minValue: B
-    let currentValue: TemplateValue<A, B>
+    let currentValue: TemplateValue<B>
     var barDiv: Div = Div()
 
-    public init(currentValue: TemplateValue<A, B>, valueRange: Range<B>) {
+    public init(currentValue: TemplateValue<B>, valueRange: Range<B>) {
         self.currentValue = currentValue
         self.maxValue = valueRange.upperBound
         self.minValue = valueRange.lowerBound
     }
 
-    public init(currentValue: TemplateValue<A, B>, valueRange: ClosedRange<B>) {
+    public init(currentValue: TemplateValue<B>, valueRange: ClosedRange<B>) {
         self.currentValue = currentValue
         self.maxValue = valueRange.upperBound
         self.minValue = valueRange.lowerBound
     }
 
-    init(currentValue: TemplateValue<A, B>, minValue: B, maxValue: B, barDiv: Div, attributes: [HTMLAttribute]) {
+    init(currentValue: TemplateValue<B>, minValue: B, maxValue: B, barDiv: Div, attributes: [HTMLAttribute]) {
         self.currentValue = currentValue
         self.maxValue = maxValue
         self.minValue = minValue
@@ -73,11 +73,11 @@ public struct ProgressBar<A, B>: HTMLComponent, AttributeNode where B: Comparabl
         )
     }
 
-    public func copy(with attributes: [HTMLAttribute]) -> ProgressBar<A, B> {
+    public func copy(with attributes: [HTMLAttribute]) -> ProgressBar<B> {
         return .init(currentValue: currentValue, minValue: minValue, maxValue: maxValue, barDiv: barDiv, attributes: attributes)
     }
 
-    public func modify(if condition: Conditionable, modifyer: (ProgressBar<A, B>) -> ProgressBar<A, B>) -> ProgressBar<A, B> {
+    public func modify(if condition: Conditionable, modifyer: (ProgressBar<B>) -> ProgressBar<B>) -> ProgressBar<B> {
         let emptyNode = ProgressBar(currentValue: currentValue, minValue: minValue, maxValue: maxValue, barDiv: barDiv.copy(with: []), attributes: [])
         let modified = modifyer(emptyNode)
         let modifiedBar = modified.barDiv.wrapAttributes(with: condition)

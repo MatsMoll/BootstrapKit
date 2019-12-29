@@ -74,7 +74,7 @@ struct AlertViewTest : StaticView {
 
 struct BreadcrumbViewTest : TemplateView {
     
-    var context: RootValue<String> = .root()
+    var context: TemplateValue<String> = .root()
     
     var body: HTML {
         Breadcrumb {
@@ -104,7 +104,7 @@ struct CardViewTest : StaticView {
 
 struct AccordionViewTest : TemplateView {
 
-    let context: RootValue<[Subscription]> = .root()
+    let context: TemplateValue<[Subscription]> = .root()
 
     var body: HTML {
         Container {
@@ -135,7 +135,7 @@ struct Subscription : Equatable {
 
 struct FormViewTest : TemplateView {
 
-    let context: RootValue<LoginContext> = .root()
+    let context: TemplateValue<LoginContext> = .root()
 
     var body: HTML {
         Container {
@@ -170,7 +170,7 @@ struct FormViewTest : TemplateView {
 
 struct ListGroupTest: TemplateView {
 
-    var context: RootValue<[Subscription]> = .root()
+    var context: TemplateValue<[Subscription]> = .root()
 
     var body: HTML {
         Div {
@@ -181,7 +181,9 @@ struct ListGroupTest: TemplateView {
             }
             ListGroup(context, isActive: { $0.price < 100 }) { value in
                 Text {
-                    value.price + " " + value.description
+                    value.price
+                    " "
+                    value.description
                 }
             }
         }

@@ -21,7 +21,7 @@ public struct Breadcrumb: HTMLComponent, AttributeNode {
         self.breadcrumbItems = breadcrumbItems()
     }
 
-    public init<A, B>(items: TemplateValue<A, [B]>, isActive: (RootValue<B>) -> Conditionable, @HTMLBuilder content: (RootValue<B>) -> HTML) {
+    public init<B>(items: TemplateValue<[B]>, isActive: (TemplateValue<B>) -> Conditionable, @HTMLBuilder content: (TemplateValue<B>) -> HTML) {
         self.breadcrumbItems = ForEach(in: items) { item in
             ListItem {
                 content(item)
@@ -51,8 +51,8 @@ public struct Breadcrumb: HTMLComponent, AttributeNode {
 }
 
 extension Breadcrumb {
-    public init<A>(items: [A], isActive: (RootValue<A>) -> Conditionable, @HTMLBuilder content: (RootValue<A>) -> HTML) {
-        self.init(items: RootValue<[A]>.constant(items), isActive: isActive, content: content)
+    public init<A>(items: [A], isActive: (TemplateValue<A>) -> Conditionable, @HTMLBuilder content: (TemplateValue<A>) -> HTML) {
+        self.init(items: TemplateValue<[A]>.constant(items), isActive: isActive, content: content)
     }
 }
 

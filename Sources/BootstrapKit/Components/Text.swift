@@ -49,7 +49,7 @@ public struct Text: HTMLComponent, AttributeNode, LocalizableNode {
         self.style = .paragraph
     }
 
-    public init<A, B>(_ localizedKey: String, with context: TemplateValue<A, B>) where B : Encodable {
+    public init<B>(_ localizedKey: String, with context: TemplateValue<B>) where B : Encodable {
         self.content = Localized(key: localizedKey, context: context)
         self.style = .paragraph
     }
