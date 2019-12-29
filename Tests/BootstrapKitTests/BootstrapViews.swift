@@ -179,12 +179,14 @@ struct ListGroupTest: TemplateView {
                     value.description
                 }
             }
-            ListGroup(context, isActive: { $0.price < 100 }) { value in
+            ListGroup(context) { value in
                 Text {
                     value.price
                     " "
                     value.description
                 }
+            }.isActive {
+                $0.price < 100 
             }
         }
     }
