@@ -179,9 +179,7 @@ struct ListGroupTest: HTMLTemplate {
             }
             ListGroup(context) { value in
                 Text {
-                    value.price
-                    " "
-                    value.description
+                    value.price + " " + value.description
                 }
             }
         }
