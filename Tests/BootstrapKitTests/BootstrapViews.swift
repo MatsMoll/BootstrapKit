@@ -8,10 +8,7 @@
 import BootstrapKit
 import HTMLKit
 
-typealias StaticView = HTMLComponent
-typealias TemplateView = HTMLTemplate
-
-struct TextView : StaticView {
+struct TextView : HTMLComponent {
     
     var body: HTML {
         Container {
@@ -36,7 +33,7 @@ struct TextView : StaticView {
     }
 }
 
-struct ColumnView : StaticView {
+struct ColumnView : HTMLComponent {
     
     var body: HTML {
         Container {
@@ -49,7 +46,7 @@ struct ColumnView : StaticView {
     }
 }
 
-struct AlertViewTest : StaticView {
+struct AlertViewTest : HTMLComponent {
     
     var body: HTML {
         Container(mode: .fluid) {
@@ -72,7 +69,7 @@ struct AlertViewTest : StaticView {
     }
 }
 
-struct BreadcrumbViewTest : TemplateView {
+struct BreadcrumbViewTest : HTMLTemplate {
     
     var context: TemplateValue<String> = .root()
     
@@ -84,7 +81,7 @@ struct BreadcrumbViewTest : TemplateView {
     }
 }
 
-struct CardViewTest : StaticView {
+struct CardViewTest : HTMLComponent {
 
     var body: HTML {
         Container {
@@ -102,7 +99,7 @@ struct CardViewTest : StaticView {
 }
 
 
-struct AccordionViewTest : TemplateView {
+struct AccordionViewTest : HTMLTemplate {
 
     let context: TemplateValue<[Subscription]> = .root()
 
@@ -133,7 +130,7 @@ struct Subscription : Equatable {
     let price: Int
 }
 
-struct FormViewTest : TemplateView {
+struct FormViewTest : HTMLTemplate {
 
     let context: TemplateValue<LoginContext> = .root()
 
@@ -168,9 +165,10 @@ struct FormViewTest : TemplateView {
     }
 }
 
-struct ListGroupTest: TemplateView {
+struct ListGroupTest: HTMLTemplate {
 
-    var context: TemplateValue<[Subscription]> = .root()
+    @TemplateValue([Subscription].self)
+    var context
 
     var body: HTML {
         Div {
@@ -186,13 +184,13 @@ struct ListGroupTest: TemplateView {
                     value.description
                 }
             }.isActive {
-                $0.price < 100 
+                $0.price < 100
             }
         }
     }
 }
 
-struct RootView: StaticView {
+struct RootView: HTMLComponent {
 
     var body: HTML {
         NavigationBar {

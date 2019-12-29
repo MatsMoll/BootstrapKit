@@ -36,11 +36,11 @@ public struct ListGroup<B>: HTMLComponent {
         self.style = .regular
     }
 
-    public func isActive(_ isActive: @escaping (TemplateValue<B>) -> Conditionable) -> ListGroup {
+    public func isActive(_ isActive: @escaping (TemplateValue<B>) -> Conditionable) -> ListGroup<B> {
         .init(list, isActive: isActive, content: content, style: style)
     }
 
-    public func style(_ style: Style) -> ListGroup {
+    public func style(_ style: Style) -> ListGroup<B> {
         .init(list, isActive: isActive, content: content, style: style)
     }
 
