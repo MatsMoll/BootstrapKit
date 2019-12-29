@@ -177,15 +177,13 @@ struct ListGroupTest: HTMLTemplate {
                     value.description
                 }
             }
-//            ListGroup(context) { value in
-//                Text {
-//                    value.price
-//                    " "
-//                    value.description
-//                }
-//            }.isActive {
-//                $0.price < 100
-//            }
+            ListGroup(context) { value in
+                Text {
+                    value.price
+                    " "
+                    value.description
+                }
+            }
         }
     }
 }
