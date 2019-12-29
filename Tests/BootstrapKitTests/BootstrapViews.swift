@@ -181,6 +181,8 @@ struct ListGroupTest: HTMLTemplate {
                 Text {
                     value.price + " " + value.description
                 }
+            }.isActive {
+                $0.price < 100
             }
         }
     }
