@@ -36,7 +36,7 @@ public struct Breadcrumb: HTMLComponent, AttributeNode {
     
     public var body: HTML {
         Nav {
-            OrderdList {
+            OrderedList {
                 breadcrumbItems
             }
             .class("breadcrumb")
