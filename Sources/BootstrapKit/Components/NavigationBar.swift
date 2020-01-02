@@ -130,7 +130,7 @@ public struct NavigationBar: HTMLComponent, AttributeNode {
                 .aria(for: "target", value: HTMLIdentifier.id(id))
                 .aria(for: "controls", value: id) +
             Div {
-                UnorderdList {
+                OrderedList {
                     content
                 }
                 .class("navbar-nav ml-auto")
