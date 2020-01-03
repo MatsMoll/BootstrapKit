@@ -1,5 +1,17 @@
 # BootstrapKit
 
+## Usage
+
+Add this as a dependencies in your `Package.swift` file.
+```swift
+.package(url: "https://github.com/MatsMoll/BootstrapKit.git", from: "1.0.0-beta.3")
+...
+// And remember to add BootstrapKit to your target
+.target(
+    name: "YourProject",
+    dependencies: ["BootstrapKit"]),
+```
+
 An extension on HTMLKit, that simplefies the use of Bootstrap 4 classes.
 
 This can result in a HTML template looking like this:
