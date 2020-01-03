@@ -195,6 +195,14 @@ public struct InputGroup : HTMLComponent, AttributeNode {
     public func validFeedback(@HTMLBuilder _ feedback: () -> HTML) -> InputGroup {
         InputGroup(wrapInput: wrapInput, input: input, prepend: prepend, append: append, invalidFeedback: invalidFeedback, validFeedback: feedback(), attributes: attributes)
     }
+    
+    public func prepend(@HTMLBuilder _ addon: () -> InputGroupAddons) -> InputGroup {
+        InputGroup(wrapInput: wrapInput, input: input, prepend: addon(), append: append, invalidFeedback: invalidFeedback, validFeedback: validFeedback, attributes: attributes)
+    }
+    
+    public func append(@HTMLBuilder _ addon: () -> InputGroupAddons) -> InputGroup {
+        InputGroup(wrapInput: wrapInput, input: input, prepend: prepend, append: addon(), invalidFeedback: invalidFeedback, validFeedback: validFeedback, attributes: attributes)
+    }
 
     public func copy(with attributes: [HTMLAttribute]) -> InputGroup {
         InputGroup(wrapInput: wrapInput, input: input, prepend: prepend, append: append, invalidFeedback: invalidFeedback, validFeedback: validFeedback, attributes: attributes)
