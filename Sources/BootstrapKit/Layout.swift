@@ -103,7 +103,7 @@ public enum SpacingSize: String {
     case auto
 }
 
-public enum CollumnWidth: Int {
+public enum ColumnWidth: Int {
     case one = 1
     case two
     case three
@@ -144,7 +144,7 @@ extension GlobalAttributes {
         }
     }
 
-    public func column(width: CollumnWidth, for sizeClass: SizeClass = .all) -> Self {
+    public func column(width: ColumnWidth, for sizeClass: SizeClass = .all) -> Self {
         switch sizeClass {
         case .all:  return self.class("col-\(width.rawValue)")
         default:    return self.class("col-\(sizeClass.rawValue)-\(width.rawValue)")

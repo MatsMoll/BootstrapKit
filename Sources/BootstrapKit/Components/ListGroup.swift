@@ -45,7 +45,7 @@ public struct ListGroup<B>: HTMLComponent {
     }
 
     public var body: HTML {
-        UnorderdList {
+        UnorderedList {
             ForEach(in: list) { value in
                 ListItem {
                     content(value)
