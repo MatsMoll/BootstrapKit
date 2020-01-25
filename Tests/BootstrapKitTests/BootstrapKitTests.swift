@@ -25,7 +25,7 @@ final class BootstrapKitTests: XCTestCase {
         let accordion = try renderer.render(raw: AccordionViewTest.self, with: testData)
         let form = try renderer.render(raw: FormViewTest.self, with: LoginContext(loginError: "", options: []))
         let listGroup = try renderer.render(raw: ListGroupTest.self, with: testData)
-
+        let inputGroup = try renderer.render(raw: InputGroupTest.self, with: LoginContext(loginError: "", options: []))
         print(listGroup)
         print(accordion)
         print(form)
@@ -50,6 +50,7 @@ final class BootstrapKitTests: XCTestCase {
         try renderer.add(view: AccordionViewTest())
         try renderer.add(view: FormViewTest())
         try renderer.add(view: ListGroupTest())
+        try renderer.add(view: InputGroupTest())
     }
 
     static var allTests = [
