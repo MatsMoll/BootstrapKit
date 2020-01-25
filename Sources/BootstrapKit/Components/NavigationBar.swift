@@ -127,7 +127,7 @@ public struct NavigationBar: HTMLComponent, AttributeNode {
             button
                 .data(for: "toggle", value: "collapse")
                 .aria(for: "expanded", value: false)
-                .aria(for: "target", value: HTMLIdentifier.id(id))
+                .data(for: "target", value: HTMLIdentifier.id(id))
                 .aria(for: "controls", value: id) +
             Div {
                 OrderedList {
