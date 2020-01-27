@@ -165,6 +165,32 @@ struct FormViewTest : HTMLTemplate {
     }
 }
 
+struct InputGroupTest: HTMLTemplate {
+    let context: TemplateValue<LoginContext> = .root()
+
+    var body: HTML {
+        Container {
+            Form {
+                InputGroup {
+                    Input(type: .text, id: "username")
+                        .placeholder("Name")
+                        .name("username")
+                }
+                .prepend {
+                    InputGroup.Text("User")
+                }
+                .append {
+                    Button {
+                        "Create"
+                    }
+                    .button(style: .success)
+                    .name("submit")
+                }
+            }
+        }
+    }
+}
+
 struct ListGroupTest: HTMLTemplate {
 
     @TemplateValue([Subscription].self)
