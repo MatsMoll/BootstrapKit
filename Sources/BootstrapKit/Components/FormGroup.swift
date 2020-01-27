@@ -41,7 +41,7 @@ public struct FormGroup: HTMLComponent {
     }
 
 
-    func description(@HTMLBuilder content: () -> HTML) -> FormGroup {
+    public func description(@HTMLBuilder content: () -> HTML) -> FormGroup {
         .init(label: label, input: input, optionalContent: content(), attributes: attributes)
     }
 }

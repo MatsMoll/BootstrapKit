@@ -148,10 +148,11 @@ struct FormViewTest : HTMLTemplate {
                 FormGroup(label: "Username") {
                     Input(type: .text, id: "username")
                 }
-                FormGroup(
-                    label: "Password",
-                    Input(type: .password, id: "password")) {
-                        Small { "Needs to contain ..." }
+                FormGroup(label: "Password") {
+                    Input(type: .password, id: "password")
+                }
+                .description {
+                    Small { "Needs to contain ..." }
                 }
                 FormGroup(label: "Test") {
                     Select(context.options) { option in
