@@ -7,21 +7,27 @@
 
 import HTMLKit
 
+extension BootstrapStyle {
+    fileprivate var alertClass: String {
+        "alert alert-\(rawValue) bg-\(rawValue)"
+    }
+}
+
 public struct Alert: HTMLComponent {
 
     public var attributes: [HTMLAttribute]
     let content: HTML
     let isDisimissable: Conditionable
-    let style: BootstrapStyle
+    let style: TemplateValue<BootstrapStyle>
 
     public init(@HTMLBuilder content: () -> HTML) {
         self.isDisimissable = true
         self.content = content()
         self.attributes = []
-        self.style = .primary
+        self.style = .constant(.primary)
     }
 
-    init(isDisimissable: Conditionable, style: BootstrapStyle, attributes: [HTMLAttribute], content: HTML) {
+    init(isDisimissable: Conditionable, style: TemplateValue<BootstrapStyle>, attributes: [HTMLAttribute], content: HTML) {
         self.attributes = attributes
         self.content = content
         self.isDisimissable = isDisimissable
@@ -42,7 +48,7 @@ public struct Alert: HTMLComponent {
                     .aria(for: "label", value: "Close")
             }
         }
-            .class("alert alert-\(style.rawValue) bg-\(style.rawValue)" + IF(isDisimissable) { " fade show" })
+            .class(style.alertClass + IF(isDisimissable) { " fade show" })
             .role("alert")
             .add(attributes: attributes)
     }
@@ -60,6 +66,10 @@ extension Alert : AttributeNode {
 
 extension Alert {
     public func background(color style: BootstrapStyle) -> Alert {
+        .init(isDisimissable: isDisimissable, style: .constant(style), attributes: attributes, content: content)
+    }
+
+    public func background(color style: TemplateValue<BootstrapStyle>) -> Alert {
         .init(isDisimissable: isDisimissable, style: style, attributes: attributes, content: content)
     }
 }
