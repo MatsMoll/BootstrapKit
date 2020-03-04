@@ -1,23 +1,31 @@
 public struct Modal: HTMLComponent, AttributeNode {
 
+    struct DataContent {
+        let tagID: String
+        let dataID: String
+    }
+
     let title: HTML
     let content: HTML
+    let dataContent: [DataContent]
     public var attributes: [HTMLAttribute]
 
     public init(title: HTML, id: HTML, @HTMLBuilder content: () -> HTML) {
         self.title = title
         self.content = content()
         self.attributes = [HTMLAttribute(attribute: "id", value: id)]
+        self.dataContent = []
     }
 
-    private init(title: HTML, content: HTML, attributes: [HTMLAttribute]) {
+    private init(title: HTML, content: HTML, dataContent: [DataContent], attributes: [HTMLAttribute]) {
         self.title = title
         self.content = content
+        self.dataContent = dataContent
         self.attributes = attributes
     }
 
     public var body: HTML {
-        let id = value(of: "id") ?? "modal-content"
+        let id = modalID
         let modifiesAttributes = attributes.filter({ $0.attribute != "id" })
         return Div {
             Div {
@@ -27,7 +35,6 @@ public struct Modal: HTMLComponent, AttributeNode {
                             title
                         }
                         .class("modal-title")
-
                         Button {
                             "×"
                         }
@@ -37,7 +44,6 @@ public struct Modal: HTMLComponent, AttributeNode {
                         .aria(for: "hidden", value: "true")
                     }
                     .class("modal-header bg-light")
-
                     Div {
                         Div {
                             content
@@ -58,7 +64,43 @@ public struct Modal: HTMLComponent, AttributeNode {
         .add(attributes: modifiesAttributes)
     }
 
+    private var modalID: HTML {
+        value(of: "id") ?? "modal-content"
+    }
+
+    public var scripts: HTML {
+        guard dataContent.isEmpty == false else { return "" }
+        let dataScript = dataContent.reduce(into: "") { script, dataContent in
+            let jsVarName = dataContent.dataID.replacingOccurrences(of: "-", with: "")
+            let tagVarName = jsVarName + "tag"
+            script +=
+            """
+              let \(jsVarName) = button.data('\(dataContent.dataID.lowercased())')
+              let \(tagVarName) = modal.find('#\(dataContent.tagID)')
+              if (\(tagVarName).prop('tagName') == 'INPUT') {
+                \(tagVarName).val(\(jsVarName))
+              } else {
+                \(tagVarName).text(\(jsVarName))
+              }
+            """
+        }
+        return Script {
+        """
+        $('#\(modalID)').on('show.bs.modal', function (event) {
+          var button = $(event.relatedTarget) // Button that triggered the modal
+          var modal = $(this)
+          \(dataScript)
+        })
+        """
+        }
+    }
+
     public func copy(with attributes: [HTMLAttribute]) -> Modal {
-        .init(title: title, content: content, attributes: attributes)
+        .init(title: title, content: content, dataContent: dataContent, attributes: attributes)
+    }
+
+    public func set(data dataID: String, to tagID: String) -> Modal {
+        let newDataContent = dataContent + [DataContent(tagID: tagID, dataID: dataID)]
+        return .init(title: title, content: content, dataContent: newDataContent, attributes: attributes)
     }
 }
