@@ -69,7 +69,7 @@ public struct Modal: HTMLComponent, AttributeNode {
     }
 
     public var scripts: HTML {
-        guard dataContent.isEmpty == false else { return "" }
+        guard dataContent.isEmpty == false else { return content.scripts }
         let dataScript = dataContent.reduce(into: "") { script, dataContent in
             let jsVarName = dataContent.dataID.replacingOccurrences(of: "-", with: "")
             let tagVarName = jsVarName + "tag"
@@ -84,15 +84,18 @@ public struct Modal: HTMLComponent, AttributeNode {
               }
             """
         }
-        return Script {
-        """
-        $('#\(modalID)').on('show.bs.modal', function (event) {
-          var button = $(event.relatedTarget) // Button that triggered the modal
-          var modal = $(this)
-          \(dataScript)
-        })
-        """
-        }
+        return [
+            content.scripts,
+            Script {
+            """
+            $('#\(modalID)').on('show.bs.modal', function (event) {
+              var button = $(event.relatedTarget) // Button that triggered the modal
+              var modal = $(this)
+              \(dataScript)
+            })
+            """
+            }
+        ]
     }
 
     public func copy(with attributes: [HTMLAttribute]) -> Modal {
