@@ -52,6 +52,15 @@ public protocol InputGroupAddons : HTML {}
 
 public struct InputGroup : HTMLComponent, AttributeNode {
 
+    public var scripts: HTML {
+        [
+            append?.scripts ?? "",
+            prepend?.scripts ?? "",
+            invalidFeedback?.scripts ?? "",
+            validFeedback?.scripts ?? ""
+        ]
+    }
+
     let prepend: InputGroupAddons?
     let append: InputGroupAddons?
     let invalidFeedback: HTML?

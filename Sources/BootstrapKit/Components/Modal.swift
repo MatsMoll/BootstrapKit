@@ -1,8 +1,33 @@
 public struct Modal: HTMLComponent, AttributeNode {
 
-    struct DataContent {
+    public struct DataContent {
+
+        public enum Types {
+            case input
+            case textArea
+            case node
+            case markdown
+
+            func scriptFor(tagID: String, dataID: String) -> String {
+                let jsVarName = dataID.replacingOccurrences(of: "-", with: "")
+                let tagVarName = jsVarName + "tag"
+                var script = "let \(jsVarName) = button.data('\(dataID.lowercased())');"
+                switch self {
+                case .input: script += "let \(tagVarName) = modal.find('#\(tagID)');\(tagVarName).val(\(jsVarName));"
+                case .textArea, .node: script += "let \(tagVarName) = modal.find('#\(tagID)');\(tagVarName).text(\(jsVarName));"
+                case .markdown: script += "\(tagID.replacingOccurrences(of: "-", with: "")).value(\(jsVarName));"
+                }
+                return script
+            }
+        }
+
         let tagID: String
         let dataID: String
+        let type: Types
+
+        var script: String {
+            type.scriptFor(tagID: tagID, dataID: dataID)
+        }
     }
 
     let title: HTML
@@ -71,18 +96,7 @@ public struct Modal: HTMLComponent, AttributeNode {
     public var scripts: HTML {
         guard dataContent.isEmpty == false else { return content.scripts }
         let dataScript = dataContent.reduce(into: "") { script, dataContent in
-            let jsVarName = dataContent.dataID.replacingOccurrences(of: "-", with: "")
-            let tagVarName = jsVarName + "tag"
-            script +=
-            """
-              let \(jsVarName) = button.data('\(dataContent.dataID.lowercased())')
-              let \(tagVarName) = modal.find('#\(dataContent.tagID)')
-              if (\(tagVarName).prop('tagName') == 'INPUT') {
-                \(tagVarName).val(\(jsVarName))
-              } else {
-                \(tagVarName).text(\(jsVarName))
-              }
-            """
+            script += dataContent.script
         }
         return [
             content.scripts,
@@ -102,8 +116,8 @@ public struct Modal: HTMLComponent, AttributeNode {
         .init(title: title, content: content, dataContent: dataContent, attributes: attributes)
     }
 
-    public func set(data dataID: String, to tagID: String) -> Modal {
-        let newDataContent = dataContent + [DataContent(tagID: tagID, dataID: dataID)]
+    public func set(data dataID: String, type: DataContent.Types, to tagID: String) -> Modal {
+        let newDataContent = dataContent + [DataContent(tagID: tagID, dataID: dataID, type: type)]
         return .init(title: title, content: content, dataContent: newDataContent, attributes: attributes)
     }
 }
