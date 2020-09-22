@@ -48,8 +48,6 @@ public struct FormRow : HTMLComponent, AttributeNode {
     }
 }
 
-public protocol InputGroupAddons : HTML {}
-
 public struct InputGroup : HTMLComponent, AttributeNode {
 
     public var scripts: HTML {
@@ -61,8 +59,8 @@ public struct InputGroup : HTMLComponent, AttributeNode {
         ]
     }
 
-    let prepend: InputGroupAddons?
-    let append: InputGroupAddons?
+    let prepend: HTML?
+    let append: HTML?
     let invalidFeedback: HTML?
     let validFeedback: HTML?
     let input: AddableAttributeNode
@@ -79,7 +77,7 @@ public struct InputGroup : HTMLComponent, AttributeNode {
         self.attributes = []
     }
 
-    init(wrapInput: Bool, input: AddableAttributeNode, prepend: InputGroupAddons?, append: InputGroupAddons?, invalidFeedback: HTML?, validFeedback: HTML?, attributes: [HTMLAttribute]) {
+    init(wrapInput: Bool, input: AddableAttributeNode, prepend: HTML?, append: HTML?, invalidFeedback: HTML?, validFeedback: HTML?, attributes: [HTMLAttribute]) {
         self.wrapInput = wrapInput
         self.input = input
         self.invalidFeedback = invalidFeedback
@@ -127,11 +125,11 @@ public struct InputGroup : HTMLComponent, AttributeNode {
         InputGroup(wrapInput: wrapInput, input: input, prepend: prepend, append: append, invalidFeedback: invalidFeedback, validFeedback: feedback(), attributes: attributes)
     }
     
-    public func prepend(@HTMLBuilder _ addon: () -> InputGroupAddons) -> InputGroup {
+    public func prepend(@HTMLBuilder _ addon: () -> HTML) -> InputGroup {
         InputGroup(wrapInput: wrapInput, input: input, prepend: addon(), append: append, invalidFeedback: invalidFeedback, validFeedback: validFeedback, attributes: attributes)
     }
     
-    public func append(@HTMLBuilder _ addon: () -> InputGroupAddons) -> InputGroup {
+    public func append(@HTMLBuilder _ addon: () -> HTML) -> InputGroup {
         InputGroup(wrapInput: wrapInput, input: input, prepend: prepend, append: addon(), invalidFeedback: invalidFeedback, validFeedback: validFeedback, attributes: attributes)
     }
 
@@ -158,12 +156,4 @@ public struct InputGroup : HTMLComponent, AttributeNode {
             }.class("input-group-text")
         }
     }
-
-    typealias ButtonAddon = Button
-    typealias DropdownAddon = Dropdown
 }
-
-extension InputGroup.None : InputGroupAddons {}
-extension InputGroup.Text : InputGroupAddons {}
-extension InputGroup.ButtonAddon : InputGroupAddons {}
-extension InputGroup.DropdownAddon : InputGroupAddons {}
