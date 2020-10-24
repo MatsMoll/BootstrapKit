@@ -184,11 +184,11 @@ extension GlobalAttributes {
     }
 
     public func margin(_ size: SpacingSize, for direction: Direction = .all, sizeClass: SizeClass = .all) -> Self {
-        sizeClass == .all ? self.class("m\(direction.rawValue)-\(size.rawValue)") : self.class("m\(direction.rawValue)-\(size.rawValue)-\(sizeClass.rawValue)")
+        sizeClass == .all ? self.class("m\(direction.rawValue)-\(size.rawValue)") : self.class("m\(direction.rawValue)-\(sizeClass.rawValue)-\(size.rawValue)")
     }
 
     public func padding(_ size: SpacingSize, for direction: Direction = .all, sizeClass: SizeClass = .all) -> Self {
-        sizeClass == .all ? self.class("p\(direction.rawValue)-\(size.rawValue)") : self.class("p\(direction.rawValue)-\(size.rawValue)-\(sizeClass.rawValue)")
+        sizeClass == .all ? self.class("p\(direction.rawValue)-\(size.rawValue)") : self.class("p\(direction.rawValue)-\(sizeClass.rawValue)-\(size.rawValue)")
     }
 
     public func display(_ display: Display, breakpoint: SizeClass = .all) -> Self {
